@@ -125,6 +125,27 @@ h1 {
   border-left: 4px solid #ff5050;
 }
 
+/* =============== ИКОНКА ВМЕСТО ЧЕКБОКСА =============== */
+.check-icon {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  transition: transform 0.1s;
+}
+
+.check-icon:hover {
+  transform: scale(1.1);
+}
+
+.day.completed .check-icon svg {
+  opacity: 0.8;
+}
+
 .day-text {
   flex: 1;
   font-size: 1.1rem;

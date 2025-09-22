@@ -40,3 +40,48 @@
 .read-the-docs {
   color: #888;
 }
+
+/* =============== АНИМАЦИИ ИКОНОК =============== */
+.check-icon-svg {
+  display: block;
+  transition: transform 0.2s cubic-bezier(0.2, 1, 0.2, 1);
+}
+
+.check-icon:hover .check-icon-svg {
+  transform: scale(1.15);
+}
+
+/* Анимация исчезновения */
+.check-icon .fade-out {
+  animation: fadeOut 0.15s ease-in forwards;
+}
+
+/* Анимация появления */
+.check-icon .fade-in {
+  animation: fadeIn 0.15s ease-out forwards;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.8); }
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Дополнительно: легкий "пружинящий" эффект при клике */
+.check-icon:active .check-icon-svg {
+  transform: scale(0.9);
+  transition: transform 0.05s;
+}
+
+.day {
+  /* ... твои текущие стили ... */
+  transition: background 0.2s, transform 0.1s;
+}
+
+.day:active {
+  transform: scale(0.98);
+}
