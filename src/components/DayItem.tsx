@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { useState } from 'react';
+import { useState } from 'react'; // 👈 ВАЖНО: useState импортирован!
 
 interface DayItemProps {
   dayIndex: number;
@@ -8,6 +8,7 @@ interface DayItemProps {
   date: Date;
   isCompleted: boolean;
   isOverdue: boolean;
+  isCurrentDay: boolean;
   onToggle: () => void;
 }
 
@@ -17,6 +18,7 @@ export default function DayItem({
   date,
   isCompleted,
   isOverdue,
+  isCurrentDay,
   onToggle,
 }: DayItemProps) {
   const [isAnimating, setIsAnimating] = useState(false);
@@ -28,10 +30,8 @@ export default function DayItem({
       e.stopPropagation();
     }
 
-    // Запускаем анимацию
     setIsAnimating(true);
 
-    // Через 150мс меняем состояние
     setTimeout(() => {
       onToggle();
       setIsAnimating(false);
@@ -40,7 +40,9 @@ export default function DayItem({
 
   return (
     <div
-      className={`day ${isCompleted ? 'completed' : ''} ${isOverdue ? 'overdue' : ''}`}
+      className={`day ${isCompleted ? 'completed' : ''} ${isOverdue ? 'overdue' : ''} ${
+        isCurrentDay && !isCompleted ? 'current-day' : ''
+      }`}
       onClick={(e) => {
         if ((e.target as HTMLElement).closest('.check-icon')) return;
         handleToggle();
@@ -48,7 +50,12 @@ export default function DayItem({
     >
       <div className="day-text">
         <strong>День {dayNumber}</strong>: {text}<br />
-        <small>{dateStr}</small>
+        <small>
+          {dateStr}
+          {isCurrentDay && (
+            <span className="current-day-label"> ← Сегодня</span>
+          )}
+        </small>
       </div>
       <div
         className={`check-icon ${isAnimating ? 'animating' : ''}`}

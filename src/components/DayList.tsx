@@ -77,6 +77,7 @@ export default function DayList({ state, startDay, onToggleDay }: DayListProps) 
               date={item.date}
               isCompleted={item.isCompleted}
               isOverdue={item.isOverdue}
+              isCurrentDay={item.index + 1 === startDay}
               onToggle={() => onToggleDay(item.index)}
             />
           ))}
