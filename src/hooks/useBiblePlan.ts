@@ -27,8 +27,8 @@ export function useBiblePlan() {
   }, [startDay]);
 
   // Переключить день
-  const toggleDay = (index) => {
-    setState(prev => {
+const toggleDay = (index: number) => {
+    setState((prev: boolean[]) => {
       const newState = [...prev];
       newState[index] = !newState[index];
       return newState;
@@ -42,10 +42,10 @@ export function useBiblePlan() {
   };
 
   // Продолжить с дня
-  const continueFromDay = (day) => {
+  const continueFromDay = (day: number) => {
     if (day < 1 || day > 111) return;
     setStartDay(day);
-    setState(prev => prev.map((_, i) => i < day - 1));
+    setState((prev: boolean[]) => prev.map((_: boolean, i: number) => i < day - 1));
   };
 
   // Статистика

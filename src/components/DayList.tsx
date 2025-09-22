@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { startOfDay, format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import DayItem from './DayItem';

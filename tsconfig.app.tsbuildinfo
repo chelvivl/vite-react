@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/currentdaybutton.tsx","./src/components/dayitem.tsx","./src/components/daylist.tsx","./src/components/menu.tsx","./src/components/monthheader.tsx","./src/components/toastnotification.tsx","./src/hooks/usebibleplan.ts","./src/utils/plan.ts"],"version":"5.9.2"}

@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 
-export default function CurrentDayButton({ startDay }) {
+interface CurrentDayButtonProps {
+  startDay: number;
+}
+
+export default function CurrentDayButton({ startDay }: CurrentDayButtonProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [direction, setDirection] = useState('⬇️');
 

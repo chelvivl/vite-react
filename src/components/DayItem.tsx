@@ -1,7 +1,23 @@
-import { format, isToday } from 'date-fns';
+import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
-export default function DayItem({ dayIndex, text, date, isCompleted, isOverdue, onToggle }) {
+interface DayItemProps {
+  dayIndex: number;
+  text: string;
+  date: Date;
+  isCompleted: boolean;
+  isOverdue: boolean;
+  onToggle: () => void;
+}
+
+export default function DayItem({
+  dayIndex,
+  text,
+  date,
+  isCompleted,
+  isOverdue,
+  onToggle,
+}: DayItemProps) {
   const dayNumber = dayIndex + 1;
   const dateStr = format(date, 'd MMMM', { locale: ru });
 
@@ -9,7 +25,7 @@ export default function DayItem({ dayIndex, text, date, isCompleted, isOverdue, 
     <div
       className={`day ${isCompleted ? 'completed' : ''} ${isOverdue ? 'overdue' : ''}`}
       onClick={(e) => {
-        if (e.target.tagName === 'INPUT') return;
+      if (e.target instanceof HTMLInputElement) return;
         onToggle();
       }}
     >
