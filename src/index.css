@@ -23,11 +23,14 @@ a:hover {
 }
 
 body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  background: transparent;
+  color: white;
+  padding: calc(env(safe-area-inset-top) + 10px) 20px 20px 20px;
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  position: relative;
+  min-height: 100svh;
+  overscroll-behavior-y: none;
 }
 
 h1 {
@@ -73,37 +76,40 @@ button:focus-visible {
           font-size: 1.8rem;
         }
 
-        .menu-button {
+      .menu-button {
           position: absolute;
-          top: calc(env(safe-area-inset-top) - 10px);
+          top: calc(env(safe-area-inset-top) + 10px); /* опустили кнопку ниже заголовка */
           right: 15px;
           background: rgba(255,255,255,0.2);
           border: none;
           width: 44px;
           height: 44px;
-          border-radius: 50%;
-          font-size: 28px;
+          border-radius: 50%; /* теперь точно круглая */
+          font-size: 24px; /* чуть уменьшили иконку, чтобы не давила */
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
           z-index: 10;
           transition: background 0.2s;
-        }
-        .menu-button:hover {
-          background: rgba(255,255,255,0.3);
+          color: white;
+          line-height: 1; /* чтобы иконка не "прыгала" */
         }
 
+       .menu-button:hover {
+              background: rgba(255,255,255,0.3);
+            }
+
         .day {
-          background: rgba(255,255,255,0.1);
-          padding: 15px;
-          border-radius: 12px;
-          margin-bottom: 15px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          transition: background 0.2s;
-          cursor: pointer;
+              background: rgba(255,255,255,0.1);
+              padding: 12px 10px; /* 12px вертикально, 10px горизонтально — стало компактнее */
+              border-radius: 12px;
+              margin-bottom: 10px; /* чуть уменьшили отступ между днями */
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              transition: background 0.2s;
+              cursor: pointer;
         }
 
         .day.completed {
@@ -115,10 +121,13 @@ button:focus-visible {
           border-left: 4px solid #ff5050;
         }
 
-        .day-text {
+       .day-text {
           flex: 1;
           font-size: 1.1rem;
+          text-align: left;           /* выравнивание текста по левому краю */
+          padding-right: 10px;        /* небольшой отступ от чекбокса */
         }
+
         .check {
           width: 24px;
           height: 24px;
