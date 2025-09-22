@@ -1,4 +1,17 @@
 /* =============== СБРОС И ОБЩИЕ СТИЛИ =============== */
+/* =============== АТОМНЫЙ СБРОС — ГАРАНТИЯ 0 ОТСТУПОВ =============== */
+html, body, #root {
+  margin: 0 !important;
+  padding: 0 !important;
+  padding-inline-start: 0 !important;
+  border: 0;
+  outline: 0;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
@@ -26,7 +39,7 @@ body {
 /* =============== 1. КНОПКА МЕНЮ =============== */
 .menu-button {
   position: absolute;
-  top: 24px;
+  top: 48px;
   right: 16px;
   background: rgba(255,255,255,0.2);
   border: none;
@@ -60,7 +73,7 @@ body {
 /* =============== 2. ЗАГОЛОВОК =============== */
 h1 {
   text-align: center;
-  margin: 64px 0 24px; /* 👈 Боковые отступы УДАЛЕНЫ */
+  margin: 128px 0 24px;
   font-size: 1.8rem;
 }
 
@@ -74,7 +87,7 @@ h1 {
 
 /* =============== 4. СПИСОК ДНЕЙ — ВПЛОТНУЮ К КРАЯМ =============== */
 #list {
-  padding: 0; /* 👈 СТРОГО 0 */
+  padding: 0px 15px; /* 👈 СТРОГО 0 */
   width: 100%;
 }
 
@@ -150,7 +163,6 @@ h1 {
     margin-bottom: 10px;
   }
   .menu-button {
-    top: 20px;
     right: 12px;
   }
 }
