@@ -1,382 +1,328 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
+/* =============== СБРОС И ОБЩИЕ СТИЛИ =============== */
 * {
+  box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-h1,
-.stats {
-  padding: 0 16px; /* 👈 отступы только у заголовка и статистики */
   margin: 0;
-}
-
-h1 {
-  text-align: center;
-  margin: 40px 0 20px;
-  font-size: 1.8rem;
-}
-
-.stats {
-  text-align: center;
-  margin: 20px 0;
-  font-size: 1.2rem;
-  font-weight: bold;
+  padding: 0;
 }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   background: transparent;
   color: white;
-  padding: env(safe-area-inset-top) 0 20px 0; /* 👈 убрали боковые отступы! */
+  padding: 0;
   margin: 0;
   position: relative;
   min-height: 100svh;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  background-attachment: fixed;
+  background-size: cover;
   overscroll-behavior-y: none;
 }
 
+/* =============== 1. КНОПКА МЕНЮ =============== */
+.menu-button {
+  position: absolute;
+  top: 24px;
+  right: 16px;
+  background: rgba(255,255,255,0.2);
+  border: none;
+  width: 44px;
+  height: 44px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: background 0.2s;
+  color: white;
+  line-height: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  padding: 0;
+  touch-action: manipulation;
+}
+
+.menu-button:hover,
+.menu-button:focus,
+.menu-button:active {
+  outline: none;
+  box-shadow: none;
+  background: rgba(255,255,255,0.3);
+}
+
+/* =============== 2. ЗАГОЛОВОК =============== */
+h1 {
+  text-align: center;
+  margin: 64px 0 24px; /* 👈 Боковые отступы УДАЛЕНЫ */
+  font-size: 1.8rem;
+}
+
+/* =============== 3. СТАТИСТИКА =============== */
+.stats {
+  text-align: center;
+  margin: 0 0 32px; /* 👈 Боковые отступы УДАЛЕНЫ */
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* =============== 4. СПИСОК ДНЕЙ — ВПЛОТНУЮ К КРАЯМ =============== */
 #list {
-  padding: 0 8px; /* 👈 минимальный отступ, чтобы не вплотную к краю */
-  margin: 0;
+  padding: 0; /* 👈 СТРОГО 0 */
   width: 100%;
+}
+
+.month-header {
+  background: rgba(255,255,255,0.15);
+  padding: 14px 12px;
+  border-radius: 10px;
+  margin: 32px 0 16px;
+  font-weight: bold;
+  font-size: 1.3rem;
+  text-align: center;
+  text-transform: capitalize;
+  width: 100%;
+}
+
+.day {
+  background: rgba(255,255,255,0.1);
+  padding: 16px 12px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+  cursor: pointer;
+  width: 100%;
+}
+
+.day.completed {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.day.overdue {
+  background: rgba(255, 80, 80, 0.2);
+  border-left: 4px solid #ff5050;
+}
+
+.day-text {
+  flex: 1;
+  font-size: 1.1rem;
+  text-align: left;
+  padding-right: 12px;
+}
+
+.check {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.completed .day-text {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* =============== АДАПТИВНОСТЬ ДЛЯ МАЛЕНЬКИХ ЭКРАНОВ =============== */
+@media (max-width: 375px) {
+  h1 {
+    margin: 56px 0 20px; /* 👈 0 по бокам */
+    font-size: 1.7rem;
+  }
+  .stats {
+    margin: 0 0 28px; /* 👈 0 по бокам */
+  }
+  #list {
+    padding: 0; /* 👈 0 всегда */
+  }
+  .month-header {
+    padding: 12px 10px;
+  }
+  .day {
+    padding: 14px 10px;
+    margin-bottom: 10px;
+  }
+  .menu-button {
+    top: 20px;
+    right: 12px;
+  }
+}
+
+/* =============== ОСТАЛЬНЫЕ КОМПОНЕНТЫ (не влияют на основной поток) =============== */
+.menu {
+  position: absolute;
+  top: 60px;
+  right: 16px;
+  background: rgba(255,255,255,0.95);
+  color: #2c3e50;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  padding: 10px 0;
+  min-width: 200px;
+  z-index: 100;
+  display: none;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.menu-item {
+  padding: 14px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.menu-item:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal {
+  background: white;
+  color: #2c3e50;
+  padding: 30px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  transform: scale(0.95);
+  transition: transform 0.3s;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+.modal-overlay.active .modal {
+  transform: scale(1);
+}
+
+.modal h3 {
+  margin: 0 0 20px;
+  font-size: 1.4rem;
+}
+
+.modal input {
+  width: 100%;
+  padding: 12px;
+  margin: 15px 0;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  text-align: center;
   box-sizing: border-box;
 }
 
-@media (max-width: 430px) {
-  .day {
-    padding: 12px 6px; /* ещё уже на маленьких iPhone */
-  }
-  body {
-    padding-left: 8px;
-    padding-right: 8px;
-  }
-  .menu-button {
-    right: 8px;
-  }
+.modal-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-.menu-button svg {
-  width: 24px;
-  height: 24px;
-}
-
-button {
+.modal-btn {
+  padding: 14px 20px;
+  border: none;
   border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  font-weight: bold;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  flex: 1;
+  font-size: 1.2rem;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.modal-btn.cancel {
+  background: #e0e0e0;
+  color: #555;
 }
 
- h1 {
-          text-align: center;
-          margin: 40px 0 20px;
-          font-size: 1.8rem;
-        }
+.modal-btn.confirm {
+  background: #667eea;
+  color: white;
+}
 
-    .menu-button {
-          position: absolute;
-          top: calc(env(safe-area-inset-top) + 10px);
-          right: 12px;
-          background: rgba(255,255,255,0.2);
-          border: none;
-          width: 44px;
-          height: 44px;
-          aspect-ratio: 1 / 1;
-          border-radius: 50%;
-          font-size: 24px;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 10;
-          transition: background 0.2s;
-          color: white;
-          line-height: 1;
-          -webkit-tap-highlight-color: transparent;
-          -webkit-appearance: none;
-          appearance: none;
-          padding: 0;
-          margin: 0;
-          touch-action: manipulation;
-        }
+.toast-notification {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: rgba(0,0,0,0.85);
+  color: white;
+  padding: 20px 30px;
+  border-radius: 16px;
+  z-index: 1000;
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.2, 1, 0.2, 1);
+  pointer-events: none;
+}
 
-        .menu-button:hover,
-        .menu-button:focus,
-        .menu-button:active {
-          outline: none;
-          box-shadow: none;
-          background: rgba(255,255,255,0.3);
-        }
-       .menu-button:hover {
-              background: rgba(255,255,255,0.3);
-            }
+.toast-notification.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
 
-         .day {
-              background: rgba(255,255,255,0.1);
-              padding: 12px 8px; /* 👈 8px по бокам */
-              border-radius: 12px;
-              margin-bottom: 10px;
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              transition: background 0.2s;
-              cursor: pointer;
-            }
-        .day.completed {
-          background: rgba(0, 0, 0, 0.3);
-        }
+#current-day-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(255,255,255,0.9);
+  color: #667eea;
+  border: none;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  cursor: pointer;
+  z-index: 99;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
 
-        .day.overdue {
-          background: rgba(255, 80, 80, 0.2);
-          border-left: 4px solid #ff5050;
-        }
-
-       .day-text {
-          flex: 1;
-          font-size: 1.1rem;
-          text-align: left;           /* выравнивание текста по левому краю */
-          padding-right: 10px;        /* небольшой отступ от чекбокса */
-        }
-
-        .check {
-          width: 24px;
-          height: 24px;
-          cursor: pointer;
-        }
-
-        .completed .day-text {
-          text-decoration: line-through;
-          color: rgba(255, 255, 255, 0.6);
-        }
-
-        .stats {
-          text-align: center;
-          margin: 20px 0;
-          font-size: 1.2rem;
-          font-weight: bold;
-        }
-
-        .month-header {
-          background: rgba(255,255,255,0.15);
-          padding: 12px 8px; /* 👈 уменьшили горизонтальные отступы */
-          border-radius: 10px;
-          margin: 30px 0 15px;
-          font-weight: bold;
-          font-size: 1.3rem;
-          text-align: center;
-          text-transform: capitalize;
-          width: 100%;
-          box-sizing: border-box;
-        }
-
-        .menu {
-          position: absolute;
-          top: calc(env(safe-area-inset-top) + 50px);
-          right: 15px;
-          background: rgba(255,255,255,0.95);
-          color: #2c3e50;
-          border-radius: 12px;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-          padding: 10px 0;
-          min-width: 200px;
-          z-index: 100;
-          display: none;
-          animation: slideDown 0.2s ease-out;
-        }
-        @keyframes slideDown {
-          from { opacity: 0; transform: translateY(-10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .menu-item {
-          padding: 14px 20px;
-          cursor: pointer;
-          font-weight: bold;
-          transition: background 0.2s;
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-        .menu-item:hover {
-          background: rgba(0,0,0,0.05);
-        }
-
-        .modal-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0,0,0,0.5);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 1000;
-          opacity: 0;
-          visibility: hidden;
-          transition: all 0.3s;
-        }
-        .modal-overlay.active {
-          opacity: 1;
-          visibility: visible;
-        }
-        .modal {
-          background: white;
-          color: #2c3e50;
-          padding: 30px;
-          border-radius: 16px;
-          width: 90%;
-          max-width: 400px;
-          text-align: center;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-          transform: scale(0.95);
-          transition: transform 0.3s;
-          box-sizing: border-box;
-          margin: 0 auto;
-        }
-        .modal-overlay.active .modal {
-          transform: scale(1);
-        }
-        .modal h3 {
-          margin: 0 0 20px;
-          font-size: 1.4rem;
-        }
-        .modal input {
-          width: 100%;
-          padding: 12px;
-          margin: 15px 0;
-          border: 2px solid #e0e0e0;
-          border-radius: 8px;
-          font-size: 1.2rem;
-          text-align: center;
-          box-sizing: border-box;
-        }
-        .modal-buttons {
-          display: flex;
-          gap: 10px;
-          justify-content: center;
-          margin-top: 20px;
-        }
-        .modal-btn {
-          padding: 14px 20px;
-          border: none;
-          border-radius: 8px;
-          font-weight: bold;
-          cursor: pointer;
-          flex: 1;
-          font-size: 1.2rem;
-        }
-        .modal-btn.cancel {
-          background: #e0e0e0;
-          color: #555;
-        }
-        .modal-btn.confirm {
-          background: #667eea;
-          color: white;
-        }
-
-        .toast-notification {
-          position: fixed;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%) scale(0.9);
-          background: rgba(0,0,0,0.85);
-          color: white;
-          padding: 20px 30px;
-          border-radius: 16px;
-          z-index: 1000;
-          font-weight: bold;
-          font-size: 1.1rem;
-          text-align: center;
-          box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-          opacity: 0;
-          transition: all 0.3s cubic-bezier(0.2, 1, 0.2, 1);
-          pointer-events: none;
-        }
-        .toast-notification.show {
-          opacity: 1;
-          transform: translate(-50%, -50%) scale(1);
-        }
-
-        /* 🆕 Кнопка "Текущий день" */
-        #current-day-btn {
-          position: fixed;
-          bottom: 20px;
-          right: 20px;
-          background: rgba(255,255,255,0.9);
-          color: #667eea;
-          border: none;
-          border-radius: 50%;
-          width: 56px;
-          height: 56px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 1.2rem;
-          font-weight: bold;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-          cursor: pointer;
-          z-index: 99;
-          opacity: 0;
-          visibility: hidden;
-          transition: all 0.3s ease;
-          pointer-events: none;
-        }
-        #current-day-btn.show {
-          opacity: 1;
-          visibility: visible;
-          pointer-events: auto;
-        }
+#current-day-btn.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
