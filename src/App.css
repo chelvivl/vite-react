@@ -82,6 +82,11 @@
   transition: background 0.2s, transform 0.1s;
 }
 
+
+.icon-arrow {
+  margin-left: 15px;
+}
+
 .day:active {
   transform: scale(0.98);
 }

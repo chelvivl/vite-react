@@ -80,7 +80,6 @@ export default function DayList({ state, startDay, onToggleDay }: DayListProps) 
               isOverdue={item.isOverdue}
               isCurrentDay={item.index + 1 === startDay}
               onToggle={() => onToggleDay(item.index)}
-              onClick={() => onToggleDay(item.index)} // 👈 передаём клик
             />
           ))}
         </div>

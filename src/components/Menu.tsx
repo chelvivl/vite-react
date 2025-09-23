@@ -5,15 +5,13 @@ interface MenuProps {
   onClose: () => void;
   onReset: () => void;
   onContinue: () => void;
-  showToast: (message: string) => void;
 }
 
 export default function Menu({
   open,
   onClose,
   onReset,
-  onContinue,
-  showToast,
+  onContinue
 }: MenuProps) {
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -43,10 +41,7 @@ export default function Menu({
         📖 Продолжить с дня...
       </div>
       <div className="menu-item" onClick={() => {
-        if (window.confirm('Точно сбросить весь прогресс?')) {
-          onReset();
-          showToast('🗑️ Весь прогресс сброшен!');
-        }
+        onReset();
         onClose();
       }}>
         🗑️ Сбросить всё
