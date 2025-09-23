@@ -1,10 +1,10 @@
-// App.tsx — обновлённая версия с экраном деталей дня
-import { useState, useEffect } from 'react';
+// App.tsx — с анимациями и сохранением позиции
+import { useState, useEffect, useRef } from 'react'; // 👈 добавлен useRef
 import { useBiblePlan } from './hooks/useBiblePlan';
 import DayList from './components/DayList';
 import Menu from './components/Menu';
 import ToastNotification from './components/ToastNotification';
-import { plan } from './utils/plan'; // 👈 импортируем план для отображения текста
+import { plan } from './utils/plan';
 
 import './App.css';
 
@@ -22,7 +22,12 @@ function App() {
   const [modalOpen, setModalOpen] = useState(false);
   const [toast, setToast] = useState({ show: false, message: '' });
   const [scrollToDay, setScrollToDay] = useState<number | null>(null);
-  const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null); // 👈 новое состояние
+  const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false); // 👈 для анимации
+
+  // 👇 сохраняем позицию скролла
+  const listRef = useRef<HTMLDivElement>(null);
+  const scrollPosition = useRef(0);
 
   const showToast = (message: string) => {
     setToast({ show: true, message });
@@ -48,17 +53,44 @@ function App() {
     }
   }, [scrollToDay]);
 
-  // Если выбран день — показываем экран деталей
+  // 👇 Сохраняем позицию скролла перед уходом в детали
+  const handleDayClick = (index: number) => {
+    if (listRef.current) {
+      scrollPosition.current = listRef.current.scrollTop;
+    }
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setSelectedDayIndex(index);
+      setIsTransitioning(false);
+    }, 300); // Длина анимации — 300мс
+  };
+
+  // 👇 Восстанавливаем позицию скролла при возврате
+  const handleBack = () => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setSelectedDayIndex(null);
+      setIsTransitioning(false);
+      // Восстанавливаем скролл в следующем кадре, после рендера
+      setTimeout(() => {
+        if (listRef.current) {
+          listRef.current.scrollTop = scrollPosition.current;
+        }
+      }, 50);
+    }, 300);
+  };
+
+  // Если выбран день — показываем экран деталей с анимацией
   if (selectedDayIndex !== null) {
-    const dayText = plan[selectedDayIndex]; // текст дня
-    const dayNumber = selectedDayIndex + 1; // номер дня
+    const dayText = plan[selectedDayIndex];
+    const dayNumber = selectedDayIndex + 1;
 
     return (
-      <div className="detail-view">
+      <div className={`detail-view ${isTransitioning ? 'slide-in' : ''}`}>
         <div className="detail-header">
           <button
             className="back-button"
-            onClick={() => setSelectedDayIndex(null)}
+            onClick={handleBack} // 👈 используем handleBack
             aria-label="Назад к списку дней"
           >
             ←
@@ -66,20 +98,19 @@ function App() {
           <h2 className="detail-title">
             День {dayNumber}: {dayText}
           </h2>
-          <div className="placeholder-right"></div> {/* для центрирования заголовка */}
+          <div className="placeholder-right"></div>
         </div>
 
         <div className="detail-content">
-          {/* Сюда позже можно добавить содержимое: текст глав, аудио, заметки и т.д. */}
           <p>📖 Здесь будет содержание дня {dayNumber}...</p>
         </div>
       </div>
     );
   }
 
-  // Основной экран (список дней)
+  // Основной экран — обернут в анимированный контейнер
   return (
-    <>
+    <div className={`main-view ${isTransitioning ? 'slide-out' : ''}`}>
       <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)}>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
@@ -92,12 +123,15 @@ function App() {
         Прогресс: {completedCount} из {state.length}
       </div>
 
-      <DayList
-        state={state}
-        startDay={startDay}
-        onToggleDay={toggleDay}
-        onDayClick={setSelectedDayIndex} // 👈 передаём обработчик клика
-      />
+      {/* 👇 Оборачиваем список в div с ref */}
+      <div ref={listRef} id="list-wrapper" style={{ overflowY: 'auto', height: 'calc(100svh - 200px)' }}>
+        <DayList
+          state={state}
+          startDay={startDay}
+          onToggleDay={toggleDay}
+          onDayClick={handleDayClick} // 👈 используем handleDayClick
+        />
+      </div>
 
       <Menu
         open={menuOpen}
@@ -156,9 +190,8 @@ function App() {
           </div>
         </div>
       )}
-
       <ToastNotification show={toast.show} message={toast.message} />
-    </>
+    </div>
   );
 }
 
