@@ -22,7 +22,6 @@ function App() {
   const [modalOpen, setModalOpen] = useState(false);
   const [toast, setToast] = useState({ show: false, message: '' });
   const [scrollToDay, setScrollToDay] = useState<number | null>(null);
-  const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null); // 👈 новое состояние
 
   const showToast = (message: string) => {
     setToast({ show: true, message });
@@ -48,35 +47,6 @@ function App() {
     }
   }, [scrollToDay]);
 
-  // Если выбран день — показываем экран деталей
-  if (selectedDayIndex !== null) {
-    const dayText = plan[selectedDayIndex]; // текст дня
-    const dayNumber = selectedDayIndex + 1; // номер дня
-
-    return (
-      <div className="detail-view">
-        <div className="detail-header">
-          <button
-            className="back-button"
-            onClick={() => setSelectedDayIndex(null)}
-            aria-label="Назад к списку дней"
-          >
-            ←
-          </button>
-          <h2 className="detail-title">
-            День {dayNumber}: {dayText}
-          </h2>
-          <div className="placeholder-right"></div> {/* для центрирования заголовка */}
-        </div>
-
-        <div className="detail-content">
-          {/* Сюда позже можно добавить содержимое: текст глав, аудио, заметки и т.д. */}
-          <p>📖 Здесь будет содержание дня {dayNumber}...</p>
-        </div>
-      </div>
-    );
-  }
-
   // Основной экран (список дней)
   return (
     <>
@@ -96,7 +66,6 @@ function App() {
         state={state}
         startDay={startDay}
         onToggleDay={toggleDay}
-        onDayClick={setSelectedDayIndex} // 👈 передаём обработчик клика
       />
 
       <Menu

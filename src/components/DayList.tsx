@@ -23,10 +23,9 @@ interface DayListProps {
   state: boolean[];
   startDay: number;
   onToggleDay: (index: number) => void;
-  onDayClick?: (index: number) => void; // 👈 новый опциональный пропс
 }
 
-export default function DayList({ state, startDay, onToggleDay, onDayClick }: DayListProps) {
+export default function DayList({ state, startDay, onToggleDay }: DayListProps) {
   const today = startOfDay(new Date());
 
   const dayData = useMemo<DayData[]>(() => {
@@ -81,7 +80,7 @@ export default function DayList({ state, startDay, onToggleDay, onDayClick }: Da
               isOverdue={item.isOverdue}
               isCurrentDay={item.index + 1 === startDay}
               onToggle={() => onToggleDay(item.index)}
-              onClick={() => onDayClick?.(item.index)} // 👈 передаём клик
+              onClick={() => onToggleDay(item.index)} // 👈 передаём клик
             />
           ))}
         </div>
