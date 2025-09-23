@@ -31,7 +31,7 @@ const navigate = useNavigate();
 
  const handleClick = (dayIndex: number) => {
     navigate('/detail', {
-      state: { number: dayIndex }, // 👈 передаём число
+      state: { number: dayIndex, direction: "forward" }, // 👈 передаём число
     });
   };
 
