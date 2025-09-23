@@ -4,7 +4,6 @@ import { useBiblePlan } from './hooks/useBiblePlan';
 import DayList from './components/DayList';
 import Menu from './components/Menu';
 import ToastNotification from './components/ToastNotification';
-import CurrentDayButton from './components/CurrentDayButton';
 import { plan } from './utils/plan'; // 👈 импортируем план для отображения текста
 
 import './App.css';
@@ -159,8 +158,6 @@ function App() {
       )}
 
       <ToastNotification show={toast.show} message={toast.message} />
-
-      <CurrentDayButton startDay={startDay} />
     </>
   );
 }
