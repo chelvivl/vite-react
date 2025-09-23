@@ -68,7 +68,7 @@ export default function DayList({ state, startDay, onToggleDay, onDayClick }: Da
 
   return (
     <div id="list">
-      {groupedByMonth.map((group, idx) => (
+      {groupedByMonth.map((group, _) => (
         <div key={format(group.monthDate, 'yyyy-MM', { locale: ru })}> {/* 👈 лучше ключ */}
           <MonthHeader date={group.monthDate} />
           {group.days.map(item => (
