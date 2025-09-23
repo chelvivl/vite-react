@@ -155,7 +155,7 @@ function App() {
             </div>
           </div>
         </div>
-      )}
+      ) }
 
       <ToastNotification show={toast.show} message={toast.message} />
     </>
