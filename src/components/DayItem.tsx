@@ -1,6 +1,7 @@
+// DayItem.tsx — обновлённая версия
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { useState } from 'react'; // 👈 ВАЖНО: useState импортирован!
+import { useState } from 'react';
 
 interface DayItemProps {
   dayIndex: number;
@@ -10,6 +11,7 @@ interface DayItemProps {
   isOverdue: boolean;
   isCurrentDay: boolean;
   onToggle: () => void;
+  onClick?: () => void; // 👈 новый пропс
 }
 
 export default function DayItem({
@@ -20,6 +22,7 @@ export default function DayItem({
   isOverdue,
   isCurrentDay,
   onToggle,
+  onClick,
 }: DayItemProps) {
   const [isAnimating, setIsAnimating] = useState(false);
   const dayNumber = dayIndex + 1;
@@ -40,12 +43,13 @@ export default function DayItem({
 
   return (
     <div
+      id={`day-${dayNumber}`}
       className={`day ${isCompleted ? 'completed' : ''} ${isOverdue ? 'overdue' : ''} ${
         isCurrentDay && !isCompleted ? 'current-day' : ''
       }`}
       onClick={(e) => {
-        if ((e.target as HTMLElement).closest('.check-icon')) return;
-        handleToggle();
+        if ((e.target as HTMLElement).closest('.check-icon')) return; // игнорируем клик по чекбоксу
+        onClick?.(); // 👈 вызываем, если есть
       }}
     >
       <div className="day-text">

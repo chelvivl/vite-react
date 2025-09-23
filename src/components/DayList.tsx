@@ -1,3 +1,4 @@
+// DayList.tsx — обновлённая версия
 import { useMemo } from 'react';
 import { startOfDay, format } from 'date-fns';
 import { ru } from 'date-fns/locale';
@@ -22,9 +23,10 @@ interface DayListProps {
   state: boolean[];
   startDay: number;
   onToggleDay: (index: number) => void;
+  onDayClick?: (index: number) => void; // 👈 новый опциональный пропс
 }
 
-export default function DayList({ state, startDay, onToggleDay }: DayListProps) {
+export default function DayList({ state, startDay, onToggleDay, onDayClick }: DayListProps) {
   const today = startOfDay(new Date());
 
   const dayData = useMemo<DayData[]>(() => {
@@ -67,7 +69,7 @@ export default function DayList({ state, startDay, onToggleDay }: DayListProps) 
   return (
     <div id="list">
       {groupedByMonth.map((group, idx) => (
-        <div key={idx}>
+        <div key={format(group.monthDate, 'yyyy-MM', { locale: ru })}> {/* 👈 лучше ключ */}
           <MonthHeader date={group.monthDate} />
           {group.days.map(item => (
             <DayItem
@@ -79,6 +81,7 @@ export default function DayList({ state, startDay, onToggleDay }: DayListProps) 
               isOverdue={item.isOverdue}
               isCurrentDay={item.index + 1 === startDay}
               onToggle={() => onToggleDay(item.index)}
+              onClick={() => onDayClick?.(item.index)} // 👈 передаём клик
             />
           ))}
         </div>

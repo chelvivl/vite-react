@@ -125,3 +125,72 @@
   from { opacity: 0.7; }
   to { opacity: 1; }
 }
+/* =============== ЭКРАН ДЕТАЛЕЙ ДНЯ =============== */
+
+.detail-view {
+  padding: 1rem;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: left;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  min-height: 100svh;
+  color: white;
+}
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  z-index: 10;
+  margin-bottom: 1rem;
+}
+
+.back-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.detail-title {
+  margin: 0;
+  font-size: 1.3rem;
+  text-align: center;
+  flex: 1;
+  padding: 0 1rem;
+}
+
+.placeholder-right {
+  width: 40px; /* чтобы заголовок был по центру, не смещаясь из-за кнопки */
+}
+
+.detail-content {
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  margin-top: 1rem;
+}
+
+.detail-content p {
+  margin: 0;
+  font-size: 1.1rem;
+  text-align: center;
+  padding: 2rem 0;
+  color: rgba(255, 255, 255, 0.9);
+}

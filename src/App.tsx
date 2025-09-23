@@ -1,11 +1,13 @@
-import { useState } from 'react';
+// App.tsx — обновлённая версия с экраном деталей дня
+import { useState, useEffect } from 'react';
 import { useBiblePlan } from './hooks/useBiblePlan';
 import DayList from './components/DayList';
 import Menu from './components/Menu';
 import ToastNotification from './components/ToastNotification';
 import CurrentDayButton from './components/CurrentDayButton';
+import { plan } from './utils/plan'; // 👈 импортируем план для отображения текста
 
-import './App.css'; // если хочешь отдельные стили для компонентов — создай его
+import './App.css';
 
 function App() {
   const {
@@ -20,30 +22,70 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [toast, setToast] = useState({ show: false, message: '' });
+  const [scrollToDay, setScrollToDay] = useState<number | null>(null);
+  const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null); // 👈 новое состояние
 
-const showToast = (message: string) => {
+  const showToast = (message: string) => {
     setToast({ show: true, message });
     setTimeout(() => {
       setToast({ show: false, message: '' });
     }, 2500);
   };
 
-const handleContinueFromDay = (day: number) => {
+  const handleContinueFromDay = (day: number) => {
     continueFromDay(day);
     setModalOpen(false);
     showToast(`✅ День ${day} установлен как сегодня!`);
-    setTimeout(() => {
-      document.getElementById(`day-${day}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 300);
+    setScrollToDay(day);
   };
 
+  useEffect(() => {
+    if (scrollToDay !== null) {
+      const el = document.getElementById(`day-${scrollToDay}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      setScrollToDay(null);
+    }
+  }, [scrollToDay]);
+
+  // Если выбран день — показываем экран деталей
+  if (selectedDayIndex !== null) {
+    const dayText = plan[selectedDayIndex]; // текст дня
+    const dayNumber = selectedDayIndex + 1; // номер дня
+
+    return (
+      <div className="detail-view">
+        <div className="detail-header">
+          <button
+            className="back-button"
+            onClick={() => setSelectedDayIndex(null)}
+            aria-label="Назад к списку дней"
+          >
+            ←
+          </button>
+          <h2 className="detail-title">
+            День {dayNumber}: {dayText}
+          </h2>
+          <div className="placeholder-right"></div> {/* для центрирования заголовка */}
+        </div>
+
+        <div className="detail-content">
+          {/* Сюда позже можно добавить содержимое: текст глав, аудио, заметки и т.д. */}
+          <p>📖 Здесь будет содержание дня {dayNumber}...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Основной экран (список дней)
   return (
     <>
-    <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)}>
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-      </svg>
-    </button>
+      <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)}>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+        </svg>
+      </button>
 
       <h1>📖 Библия за 111 дней</h1>
 
@@ -55,6 +97,7 @@ const handleContinueFromDay = (day: number) => {
         state={state}
         startDay={startDay}
         onToggleDay={toggleDay}
+        onDayClick={setSelectedDayIndex} // 👈 передаём обработчик клика
       />
 
       <Menu
@@ -70,7 +113,7 @@ const handleContinueFromDay = (day: number) => {
           <div className="modal">
             <h3>📖 Продолжить с дня...</h3>
             <p>Введи номер дня, который ты читаешь <strong>сегодня</strong><br /><small>Все предыдущие дни будут отмечены</small></p>
-           <input
+            <input
               type="number"
               id="day-input"
               min="1"
@@ -92,24 +135,24 @@ const handleContinueFromDay = (day: number) => {
               <button className="modal-btn cancel" onClick={() => setModalOpen(false)}>
                 Отмена
               </button>
-          <button
-          className="modal-btn confirm"
-          onClick={() => {
-            const input = document.getElementById('day-input') as HTMLInputElement | null;
-            if (!input) {
-              showToast('❌ Элемент ввода не найден');
-              return;
-            }
-            const day = parseInt(input.value);
-            if (isNaN(day) || day < 1 || day > 111) {
-              showToast('❌ Введи корректный номер дня (1–111)');
-              return;
-            }
-            handleContinueFromDay(day);
-          }}
-        >
-          Применить
-        </button>
+              <button
+                className="modal-btn confirm"
+                onClick={() => {
+                  const input = document.getElementById('day-input') as HTMLInputElement | null;
+                  if (!input) {
+                    showToast('❌ Элемент ввода не найден');
+                    return;
+                  }
+                  const day = parseInt(input.value);
+                  if (isNaN(day) || day < 1 || day > 111) {
+                    showToast('❌ Введи корректный номер дня (1–111)');
+                    return;
+                  }
+                  handleContinueFromDay(day);
+                }}
+              >
+                Применить
+              </button>
             </div>
           </div>
         </div>
