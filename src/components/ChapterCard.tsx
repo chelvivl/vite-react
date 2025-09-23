@@ -4,29 +4,16 @@ import { useState } from 'react';
 interface ChapterCardProps {
   chapter: string; // например: "Бытие 1"
   initiallyCompleted?: boolean;
-  onToggle?: (chapter: string, isCompleted: boolean) => void;
 }
 
 export default function ChapterCard({
   chapter,
-  initiallyCompleted = false,
-  onToggle,
+  initiallyCompleted = false
 }: ChapterCardProps) {
-  const [isCompleted, setIsCompleted] = useState(initiallyCompleted);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [isCompleted] = useState(initiallyCompleted);
+  const [isAnimating] = useState(false);
 
   const handleToggle = () => {
-    setIsAnimating(true);
-    const newStatus = !isCompleted;
-    setIsCompleted(newStatus);
-
-    // Через 300ms убираем анимацию
-    setTimeout(() => {
-      setIsAnimating(false);
-    }, 300);
-
-    // Уведомляем родителя
-    onToggle?.(chapter, newStatus);
   };
 
   return (

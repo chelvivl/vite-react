@@ -49,9 +49,9 @@ export default function DetailScreen() {
         <div></div> {/* для центрирования заголовка */}
       </div>
       <div >
-        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
           {chapters.map((chapter, index) => (
-            <ChapterCard key={index} chapter={chapter} onToggle={ () => {}} />
+            <ChapterCard key={index} chapter={chapter} />
           ))}
         </div>
       </div>
