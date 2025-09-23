@@ -16,7 +16,7 @@ export default function MainScreen() {
     completedCount,
   } = useBiblePlan();
 
-    const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [clearAll, setClearAll] = useState(false);
   const [scrollToDay, setScrollToDay] = useState<number | null>(null);
