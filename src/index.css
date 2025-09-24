@@ -8,11 +8,21 @@ html, body, #root {
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 *,
 *::before,
 *::after {
+  box-sizing: border-box;
+}
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  padding-top: 8px;
   box-sizing: border-box;
 }
 
@@ -78,7 +88,7 @@ h1 {
 /* =============== СПИСОК ДНЕЙ =============== */
 
 #list {
-  padding: 0 20px;
+  padding: 0 0px;
   width: 100%;
 }
 

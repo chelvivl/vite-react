@@ -1,20 +1,18 @@
 import { useState, useEffect } from 'react';
-import { useBiblePlan } from '../hooks/useBiblePlan';
 import DayList from '../components/DayList';
 import Menu from '../components/Menu';
+import type { ReadingDay } from '../utils/types';
 
 import '../App.css';
 
-export default function MainScreen() {
+interface MainScreenProps {
+  plan: ReadingDay[];
+  onToggle: (dayNumber: number) => void;
+  onResetAll: () => void;
+  continueFromDay: (dayNumber: number) => void;
+}
 
-      const {
-    state,
-    startDay,
-    toggleDay,
-    resetProgress,
-    continueFromDay,
-    completedCount,
-  } = useBiblePlan();
+export default function MainScreen({ plan, onToggle, onResetAll, continueFromDay }: MainScreenProps) {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -38,7 +36,7 @@ export default function MainScreen() {
   }, [scrollToDay]);
 
    return (
-    <>
+    <div className="app-container">
       <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)}>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
@@ -47,21 +45,12 @@ export default function MainScreen() {
 
       <h1>📖 Библия за 111 дней</h1>
 
-      <div className="stats">
-        Прогресс: {completedCount} из {state.length}
-      </div>
-
-      <DayList
-        state={state}
-        startDay={startDay}
-        onToggleDay={toggleDay}
-      />
+      <DayList plan={plan} onToggle={onToggle}/>
 
       <Menu
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
         onReset={ () => {
-            resetProgress()
             setClearAll(true)
         }
         }
@@ -86,7 +75,7 @@ export default function MainScreen() {
                   if (isNaN(day) || day < 1 || day > 111) {
                     return;
                   }
-                  handleContinueFromDay(day);
+                  handleContinueFromDay(day-1);
                 }
               }}
             />
@@ -105,7 +94,7 @@ export default function MainScreen() {
                   if (isNaN(day) || day < 1 || day > 111) {
                     return;
                   }
-                  handleContinueFromDay(day);
+                  handleContinueFromDay(day - 1);
                 }}
               >
                 Применить
@@ -127,7 +116,7 @@ export default function MainScreen() {
               <button
                 className="modal-btn confirm"
                 onClick={() => {
-                  resetProgress();
+                  onResetAll()
                   setClearAll(false)
                 }}
               >
@@ -137,6 +126,6 @@ export default function MainScreen() {
           </div>
         </div>
       ) }
-    </>
+    </div>
   );
 }

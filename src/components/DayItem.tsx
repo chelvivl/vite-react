@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 interface DayItemProps {
   dayIndex: number;
   text: string;
-  date: Date;
+  date: string;
   isCompleted: boolean;
   isOverdue: boolean;
   isCurrentDay: boolean;
@@ -31,7 +31,7 @@ const navigate = useNavigate();
 
  const handleClick = (dayIndex: number) => {
     navigate('/detail', {
-      state: { number: dayIndex, direction: "forward" }, // 👈 передаём число
+      state: { number: dayIndex}, // 👈 передаём число
     });
   };
 

@@ -2,32 +2,42 @@
 import { useState } from 'react';
 
 interface ChapterCardProps {
-  chapter: string; // например: "Бытие 1"
-  initiallyCompleted?: boolean;
+  chapter: number,
+  bookKey: string,
+  bookName: String,
+  completed: boolean,
+  onToggleChapter: (bookKey: string, chapter: number) => void;
 }
 
 export default function ChapterCard({
-  chapter,
-  initiallyCompleted = false
+  chapter, bookKey, bookName, completed, onToggleChapter
 }: ChapterCardProps) {
-  const [isCompleted] = useState(initiallyCompleted);
+
   const [isAnimating] = useState(false);
 
   const handleToggle = () => {
+      onToggleChapter(bookKey, chapter)
+  };
+
+  const handleClick = (chapter: number) => {
+//     navigate('/chapter', {
+//       state: { chapter: chapter }, // 👈 передаём число
+//     });
+      onToggleChapter(bookKey, chapter)
   };
 
   return (
     <div
-      className={`day ${isCompleted ? 'completed' : ''}`}
+      className={`day ${completed ? 'completed' : ''}`}
       onClick={(e) => {
         const target = e.target as HTMLElement;
         if (target.closest('.check-icon')) return; // игнорируем клик по чекбоксу
-        handleToggle();
+        handleClick(chapter)
       }}
     >
       {/* Текст главы */}
       <div className="day-text" style={{ textAlign: 'left', flex: 1 }}>
-        <strong>{chapter}</strong>
+        <strong>{bookName} {chapter}</strong>
       </div>
 
       {/* Чекбокс справа */}
@@ -39,7 +49,7 @@ export default function ChapterCard({
         }}
         role="button"
         tabIndex={0}
-        aria-label={isCompleted ? "Отметить как не выполненное" : "Отметить как выполненное"}
+        aria-label={completed ? "Отметить как не выполненное" : "Отметить как выполненное"}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
@@ -55,7 +65,7 @@ export default function ChapterCard({
           cursor: 'pointer',
         }}
       >
-        {isCompleted ? (
+        {completed ? (
           <svg
             className={`check-icon-svg ${isAnimating ? 'fade-out' : 'fade-in'}`}
             width="24"
