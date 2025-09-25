@@ -43,7 +43,7 @@ export default function MainScreen({ plan, onToggle, onResetAll, continueFromDay
       statusMessage = `⚠️ Ты отстаёшь от графика на ${-dayDiff} дн.`;
       statusClass = 'status-behind';
     } else {
-      statusMessage = '📅 Сегодняшний день ещё не прочитан.';
+      statusMessage = '📅 Сегодня не прочитано';
       statusClass = 'status-on-time';
     }
   }
