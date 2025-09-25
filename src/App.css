@@ -149,7 +149,7 @@
   padding: 1rem 0;
   position: sticky;
   top: 0;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: #667eea
   z-index: 10;
   margin-bottom: 1rem;
 }
