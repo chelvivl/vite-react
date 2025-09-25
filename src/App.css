@@ -33,6 +33,7 @@
   overflow-y: auto;
   -webkit-overflow-scrolling: touch; /* плавная прокрутка на iOS */
   padding: 16px 0;
+  overscroll-behavior: contain;
 }
 
 @media (prefers-reduced-motion: no-preference) {
