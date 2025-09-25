@@ -1,5 +1,6 @@
 // components/ChapterCard.tsx
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface ChapterCardProps {
   chapter: number,
@@ -14,16 +15,17 @@ export default function ChapterCard({
 }: ChapterCardProps) {
 
   const [isAnimating] = useState(false);
+  const navigate = useNavigate();
 
   const handleToggle = () => {
       onToggleChapter(bookKey, chapter)
   };
 
-  const handleClick = (chapter: number) => {
-//     navigate('/chapter', {
-//       state: { chapter: chapter }, // 👈 передаём число
-//     });
-      onToggleChapter(bookKey, chapter)
+  const handleClick = () => {
+    navigate('/chapter', {
+      state: { chapter: chapter, bookName: bookName }, // 👈 передаём число
+    });
+//       onToggleChapter(bookKey, chapter)
   };
 
   return (
@@ -32,7 +34,7 @@ export default function ChapterCard({
       onClick={(e) => {
         const target = e.target as HTMLElement;
         if (target.closest('.check-icon')) return; // игнорируем клик по чекбоксу
-        handleClick(chapter)
+        handleClick()
       }}
     >
       {/* Текст главы */}
