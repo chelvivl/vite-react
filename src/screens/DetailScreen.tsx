@@ -34,7 +34,6 @@ export default function DetailScreen({ plan, onToggleChapter }: DetailScreenProp
   return (
     <div className="detail-view">
       <TopBar title={title} showBackButton={true}/>
-
       <div className="detail-list">
         {day.readings.map((dayChapter: BibleReading) => (
           <ChapterCard

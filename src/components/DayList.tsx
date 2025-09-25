@@ -16,7 +16,7 @@ export default function DayList({ plan, onToggle }: DayListProps) {
   const todayISO = new Date().toISOString().split("T")[0];
 
   return (
-    <div id="list">
+    <div className="day-list">
       {plan.map((day: ReadingDay, index: number) => {
         const isOverdue = day.date < todayISO && !day.completed;
 
@@ -27,10 +27,10 @@ export default function DayList({ plan, onToggle }: DayListProps) {
 
         return (
           <div key={day.day}>
-            {showMonthHeader && (
-              <h2 className="month-header">
+            {index != 0 && showMonthHeader && (
+              <div className="month-header">
                 {getMonthName(day.date)}
-              </h2>
+              </div>
             )}
             <DayItem
               dayIndex={day.day - 1}
