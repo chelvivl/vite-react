@@ -6,12 +6,13 @@ interface ChapterCardProps {
   chapter: number,
   bookKey: string,
   bookName: String,
+  bookId: number,
   completed: boolean,
   onToggleChapter: (bookKey: string, chapter: number) => void;
 }
 
 export default function ChapterCard({
-  chapter, bookKey, bookName, completed, onToggleChapter
+  chapter, bookKey, bookName, bookId, completed, onToggleChapter
 }: ChapterCardProps) {
 
   const [isAnimating] = useState(false);
@@ -21,9 +22,11 @@ export default function ChapterCard({
       onToggleChapter(bookKey, chapter)
   };
 
+   console.log("Книга из списка: " + bookId)
+
   const handleClick = () => {
     navigate('/chapter', {
-      state: { chapter: chapter, bookName: bookName }, // 👈 передаём число
+      state: { chapter: chapter, bookName: bookName, bookId: bookId }, // 👈 передаём число
     });
 //       onToggleChapter(bookKey, chapter)
   };

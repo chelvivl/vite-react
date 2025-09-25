@@ -41,6 +41,7 @@ export default function DetailScreen({ plan, onToggleChapter }: DetailScreenProp
             chapter={dayChapter.chapter}
             bookKey={dayChapter.bookKey}
             bookName={dayChapter.bookName}
+            bookId={dayChapter.bookId}
             completed={dayChapter.completed}
             onToggleChapter={onToggleChapter}
           />

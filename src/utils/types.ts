@@ -4,8 +4,9 @@ export interface BibleBook {
 }
 
 export interface BibleReading {
-  bookKey: string;      // 'Genesis', 'Matthew' и т.д.
-  bookName: string;     // 'Бытие', 'Матфея' ← НОВОЕ ПОЛЕ
+  bookKey: string;
+  bookName: string;
+  bookId: number,
   chapter: number;
   completed: boolean;
 }

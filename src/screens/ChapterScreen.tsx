@@ -3,25 +3,32 @@ import { useState, useEffect } from 'react';
 import bibleData from '../data/rst.json';
 import TopBar from '../components/TopBar'; // ← подключи TopBar
 import { useLocation } from 'react-router-dom';
-import { BibleData, Verse } from '../types/bible';
+import { BibleData, Verse, Chapter } from '../types/bible';
 
 const typedBibleData = bibleData as BibleData;
 
 const BibleChapterViewer = () => {
-  const [selectedBookIndex] = useState(0); // Псалтирь
-  const [selectedChapter] = useState(1);
+
+  const location = useLocation();
+  const chapterId = location.state?.chapter;
+  const bookName = location.state?.bookName;
+  const bookId = location.state?.bookId;
+
+   console.log("Книга: " + bookId)
+   console.log("Глава: " + chapterId)
+
   const [verses, setVerses] = useState<Verse[]>([]); // ← явно указываем тип!
   const [error, setError] = useState<string | null>(null);
 
-  const location = useLocation();
-  const chapter = location.state?.chapter;
-  const bookName = location.state?.bookName;
+      // 🔥 Сбрасываем прокрутку наверх при входе на экран
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []); // Пустой массив = выполнится один раз при монтировании
 
   const loadChapter = () => {
     setError("");
     setVerses([]);
 
-    const bookId = selectedBookIndex + 1;
     const book = typedBibleData.Books.find(b => b.BookId === bookId);
 
     if (!book) {
@@ -29,24 +36,25 @@ const BibleChapterViewer = () => {
       return;
     }
 
-    const chapter = book.Chapters.find(ch => ch.ChapterId === selectedChapter);
-    if (!chapter) {
+    const chapter = book.Chapters.find(ch => ch.ChapterId === chapterId);
+    if (!chapterId) {
       setError('Глава не найдена');
       return;
     }
 
-    const sortedVerses = [...chapter.Verses].sort((a, b) => a.VerseId - b.VerseId);
+
+    const sortedVerses = [...(chapter as Chapter).Verses].sort((a, b) => a.VerseId - b.VerseId);
     setVerses(sortedVerses);
   };
 
   useEffect(() => {
     loadChapter();
-  }, [selectedBookIndex, selectedChapter]);
+  }, [bookId, chapterId]);
 
   return (
     <div style={{ padding: '20px', maxWidth: '720px', margin: '0 auto' }}>
 
-      <TopBar title={bookName + " " + chapter} showBackButton={true}/>
+      <TopBar title={bookName + " " + chapterId} showBackButton={true}/>
 
       {error && (
         <p style={{ color: 'red', textAlign: 'center', marginTop: '20px' }}>

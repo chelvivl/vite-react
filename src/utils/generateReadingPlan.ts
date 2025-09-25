@@ -38,6 +38,7 @@ export function generateBibleReadingPlan(startDate: Date = new Date()): ReadingD
       allChapters.push({
         bookKey,
         bookName,
+        bookId: book.bookId,
         chapter: ch,
         completed: false
       });
