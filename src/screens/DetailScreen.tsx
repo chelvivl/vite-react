@@ -47,19 +47,6 @@ export default function DetailScreen({ plan, onToggleChapter }: DetailScreenProp
           />
         ))}
       </div>
-
-       <div id="list" className="detail-list">
-        {day.readings.map((dayChapter: BibleReading) => (
-          <ChapterCard
-            key={`${dayChapter.bookKey}-${dayChapter.chapter}`}
-            chapter={dayChapter.chapter}
-            bookKey={dayChapter.bookKey}
-            bookName={dayChapter.bookName}
-            completed={dayChapter.completed}
-            onToggleChapter={onToggleChapter}
-          />
-        ))}
-      </div>
     </div>
   );
 }
