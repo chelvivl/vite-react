@@ -15,6 +15,11 @@ export default function DetailScreen({ plan, onToggleChapter }: DetailScreenProp
   const location = useLocation();
   const selectedDay = location.state?.number;
 
+      // 🔥 Сбрасываем прокрутку наверх при входе на экран
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []); // Пустой массив = выполнится один раз при монтировании
+
   // Защита от ошибок
   if (selectedDay === undefined || !plan[selectedDay]) {
     navigate('/'); // или куда-то безопасно
@@ -25,11 +30,6 @@ export default function DetailScreen({ plan, onToggleChapter }: DetailScreenProp
 
   // Заголовок для TopBar
   const title = `День ${day.day}: ${day.title}`;
-
-      // 🔥 Сбрасываем прокрутку наверх при входе на экран
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []); // Пустой массив = выполнится один раз при монтировании
 
   return (
     <div className="detail-view">
