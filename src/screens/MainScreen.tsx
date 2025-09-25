@@ -38,10 +38,10 @@ export default function MainScreen({ plan, onToggle, onResetAll, continueFromDay
     const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
 
     if (dayDiff > 0) {
-      statusMessage = `✅ Ты опережаешь график на ${dayDiff} дн.`;
+      statusMessage = `✅ Опережение на ${dayDiff} дн.`;
       statusClass = 'status-ahead';
     } else if (dayDiff < 0) {
-      statusMessage = `⚠️ Ты отстаёшь от графика на ${-dayDiff} дн.`;
+      statusMessage = `⚠️ Отставание на ${-dayDiff} дн.`;
       statusClass = 'status-behind';
     } else {
       statusMessage = '📅 Сегодня не прочитано';
