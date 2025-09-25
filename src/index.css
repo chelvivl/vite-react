@@ -46,7 +46,7 @@ body {
 /* Кнопка меню */
 .menu-button {
   position: absolute;
-  top: 64px;
+  top: 40px;
   right: 16px;
   background: rgba(255, 255, 255, 0.2);
   border: none;
@@ -73,7 +73,7 @@ body {
 /* Заголовок */
 h1 {
   text-align: center;
-  margin: 128px 0 24px;
+  margin: 80px 0 24px;
   font-size: 1.8rem;
 }
 
@@ -236,7 +236,7 @@ h1 {
 
 .menu {
   position: absolute;
-  top: 30px;
+  top: 60px;
   right: 16px;
   background: rgba(255, 255, 255, 0.95);
   color: #2c3e50;
