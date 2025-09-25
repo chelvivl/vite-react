@@ -61,9 +61,7 @@ return (
       if (target.closest('.check-icon') || target.closest('.icon-arrow')) {
         return;
       }
-
-      // Переключаем галочку при клике на карточку
-      handleToggle();
+      handleClick(dayIndex);
     }}
   >
     <div className="day-text">
@@ -130,11 +128,7 @@ return (
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      onClick={(e) => {
-        e.stopPropagation(); // 👈 предотвращаем всплытие клика до карточки
-        handleClick(dayIndex);
-      }}
-      style={{ cursor: 'pointer', marginLeft: '15px' }}
+      style={{ cursor: 'pointer' }}
     >
       <path
         d="M9 6L15 12L9 18"

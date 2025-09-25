@@ -1,22 +1,38 @@
-import DayItem from './DayItem';
-import type { ReadingDay } from '../utils/types';
+import DayItem from "./DayItem";
+import type { ReadingDay } from "../utils/types";
 
 interface DayListProps {
   plan: ReadingDay[];
   onToggle: (dayNumber: number) => void;
 }
 
+// Вспомогательная функция для получения названия месяца по дате в формате 'YYYY-MM-DD'
+const getMonthName = (dateStr: string): string => {
+  const date = new Date(dateStr);
+  return date.toLocaleString("ru-RU", { month: "long" }); // "сентябрь", "октябрь" и т.д.
+};
+
 export default function DayList({ plan, onToggle }: DayListProps) {
-   const todayISO = new Date().toISOString().split('T')[0];
+  const todayISO = new Date().toISOString().split("T")[0];
+
   return (
     <div id="list">
-      {plan.map( (day: ReadingDay) => {
-            const isOverdue = day.date < todayISO && !day.completed;
+      {plan.map((day: ReadingDay, index: number) => {
+        const isOverdue = day.date < todayISO && !day.completed;
 
-            return (
-        <div key={day.day}>
-           <DayItem
-              key={day.day}
+        // Проверяем, начинается ли новый месяц
+        const showMonthHeader =
+          index === 0 || // всегда показываем месяц для первого элемента
+          day.date.substring(0, 7) !== plan[index - 1].date.substring(0, 7); // сравниваем YYYY-MM
+
+        return (
+          <div key={day.day}>
+            {showMonthHeader && (
+              <h2 className="month-header">
+                {getMonthName(day.date)}
+              </h2>
+            )}
+            <DayItem
               dayIndex={day.day - 1}
               text={day.title}
               date={day.date}
@@ -24,13 +40,11 @@ export default function DayList({ plan, onToggle }: DayListProps) {
               isOverdue={isOverdue}
               isCurrentDay={false}
               onToggle={() => {
-                console.log("этого дня: " + day.date)
-                console.log("сегодня: " + todayISO)
-              onToggle(day.day)
+                onToggle(day.day);
               }}
             />
-        </div>
-      )
+          </div>
+        );
       })}
     </div>
   );

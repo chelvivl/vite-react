@@ -13,19 +13,49 @@ interface MainScreenProps {
 }
 
 export default function MainScreen({ plan, onToggle, onResetAll, continueFromDay }: MainScreenProps) {
-
   const [menuOpen, setMenuOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [clearAll, setClearAll] = useState(false);
   const [scrollToDay, setScrollToDay] = useState<number | null>(null);
+  const [bannerVisible, setBannerVisible] = useState(false);
 
-  const handleContinueFromDay = (day: number) => {
-    continueFromDay(day);
-    setModalOpen(false);
-    setScrollToDay(day);
-  };
+  const todayISO = new Date().toISOString().split('T')[0];
 
- useEffect(() => {
+  // === Определяем статус ===
+  let statusMessage = '';
+  let statusClass = '';
+
+  const firstUncompleted = plan.find(day => !day.completed);
+
+  if (!firstUncompleted) {
+    statusMessage = '🎉 Поздравляем! Ты завершил весь план чтения!';
+    statusClass = 'status-completed';
+  } else {
+    const firstUncompletedDate = new Date(firstUncompleted.date);
+    const today = new Date(todayISO);
+    const timeDiff = firstUncompletedDate.getTime() - today.getTime();
+    const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+    if (dayDiff > 0) {
+      statusMessage = `✅ Ты опережаешь график на ${dayDiff} дн.`;
+      statusClass = 'status-ahead';
+    } else if (dayDiff < 0) {
+      statusMessage = `⚠️ Ты отстаёшь от графика на ${-dayDiff} дн.`;
+      statusClass = 'status-behind';
+    } else {
+      statusMessage = '📅 Сегодняшний день ещё не прочитан.';
+      statusClass = 'status-on-time';
+    }
+  }
+
+  // === Анимация появления баннера ===
+  useEffect(() => {
+    const timer = setTimeout(() => setBannerVisible(true), 100);
+    return () => clearTimeout(timer);
+  }, [statusMessage]);
+
+  // === Скролл ===
+  useEffect(() => {
     if (scrollToDay !== null) {
       const el = document.getElementById(`day-${scrollToDay}`);
       if (el) {
@@ -35,7 +65,14 @@ export default function MainScreen({ plan, onToggle, onResetAll, continueFromDay
     }
   }, [scrollToDay]);
 
-   return (
+  // === Обработчики ===
+  const handleContinueFromDay = (day: number) => {
+    continueFromDay(day);
+    setModalOpen(false);
+    setScrollToDay(day);
+  };
+
+  return (
     <div className="app-container">
       <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)}>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -45,15 +82,17 @@ export default function MainScreen({ plan, onToggle, onResetAll, continueFromDay
 
       <h1>📖 Библия за 111 дней</h1>
 
-      <DayList plan={plan} onToggle={onToggle}/>
+      {/* === Баннер статуса с анимацией === */}
+      <div className={`status-banner ${statusClass} ${bannerVisible ? 'status-banner-visible' : ''}`}>
+        {statusMessage}
+      </div>
+
+      <DayList plan={plan} onToggle={onToggle} />
 
       <Menu
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
-        onReset={ () => {
-            setClearAll(true)
-        }
-        }
+        onReset={() => setClearAll(true)}
         onContinue={() => setModalOpen(true)}
       />
 
@@ -72,10 +111,8 @@ export default function MainScreen({ plan, onToggle, onResetAll, continueFromDay
                 if (e.key === 'Enter') {
                   const target = e.target as HTMLInputElement;
                   const day = parseInt(target.value);
-                  if (isNaN(day) || day < 1 || day > 111) {
-                    return;
-                  }
-                  handleContinueFromDay(day-1);
+                  if (isNaN(day) || day < 1 || day > 111) return;
+                  handleContinueFromDay(day - 1);
                 }
               }}
             />
@@ -87,13 +124,9 @@ export default function MainScreen({ plan, onToggle, onResetAll, continueFromDay
                 className="modal-btn confirm"
                 onClick={() => {
                   const input = document.getElementById('day-input') as HTMLInputElement | null;
-                  if (!input) {
-                    return;
-                  }
+                  if (!input) return;
                   const day = parseInt(input.value);
-                  if (isNaN(day) || day < 1 || day > 111) {
-                    return;
-                  }
+                  if (isNaN(day) || day < 1 || day > 111) return;
                   handleContinueFromDay(day - 1);
                 }}
               >
@@ -102,13 +135,13 @@ export default function MainScreen({ plan, onToggle, onResetAll, continueFromDay
             </div>
           </div>
         </div>
-      ) }
+      )}
 
-       {clearAll && (
+      {clearAll && (
         <div className="modal-overlay active">
           <div className="modal">
             <h3>Сбросить план</h3>
-            <p>Вы действительно хотите сбросить текущий план чтения?<br/></p>
+            <p>Вы действительно хотите сбросить текущий план чтения?<br /></p>
             <div className="modal-buttons">
               <button className="modal-btn cancel" onClick={() => setClearAll(false)}>
                 Отмена
@@ -116,8 +149,8 @@ export default function MainScreen({ plan, onToggle, onResetAll, continueFromDay
               <button
                 className="modal-btn confirm"
                 onClick={() => {
-                  onResetAll()
-                  setClearAll(false)
+                  onResetAll();
+                  setClearAll(false);
                 }}
               >
                 Сбросить
@@ -125,7 +158,7 @@ export default function MainScreen({ plan, onToggle, onResetAll, continueFromDay
             </div>
           </div>
         </div>
-      ) }
+      )}
     </div>
   );
 }
