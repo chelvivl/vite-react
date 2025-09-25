@@ -282,7 +282,6 @@ body {
   border-radius: 10px;
   font-weight: 600;
   text-align: center;
-  background-color: #f8f9fa;
   color: #333;
   display: flex;
   justify-content: center;
@@ -300,25 +299,21 @@ body {
 }
 
 .status-banner.status-ahead {
-  background-color: #d4edda;
   color: #155724;
   border: 1px solid #c3e6cb;
 }
 
 .status-banner.status-behind {
-  background-color: #f8d7da;
   color: #721c24;
   border: 1px solid #f1b0b7;
 }
 
 .status-banner.status-on-time {
-  background-color: #d1ecf1;
   color: #0c5460;
   border: 1px solid #a3daff;
 }
 
 .status-banner.status-completed {
-  background-color: #fff3cd;
   color: #856404;
   border: 1px solid #ffeaa7;
 }
