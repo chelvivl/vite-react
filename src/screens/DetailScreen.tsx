@@ -1,5 +1,5 @@
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useRef } from "react";
 import ChapterCard from "../components/ChapterCard";
 import type { BibleReading, ReadingDay } from "../utils/types";
 
@@ -13,17 +13,39 @@ export default function DetailScreen({ plan, onToggleChapter }: DetailScreenProp
   const location = useLocation();
   const selectedDay = location.state?.number;
 
+  // Все хуки — строго в начале, без условий!
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  // Проверка валидности и навигация — через useEffect или после хуков
+  useEffect(() => {
+    if (selectedDay == null || selectedDay < 0 || selectedDay >= plan.length) {
+      navigate(-1);
+    }
+  }, [selectedDay, plan.length, navigate]);
+
+  // Если данные некорректны — рендерим null, но ПОСЛЕ хуков
+  if (selectedDay == null || selectedDay < 0 || selectedDay >= plan.length) {
+    return null;
+  }
+
   const day = plan[selectedDay];
+
   const handleGoBack = () => {
     navigate(-1);
   };
 
+  useEffect(() => {
+    if (contentRef.current) {
+      contentRef.current.scrollTop = 0;
+    }
+  }, []);
+
   return (
     <div className="detail-view">
-      <div className="detail-header">
+      <header className="detail-header">
         <button
           className="back-button"
-          onClick={() => handleGoBack()}
+          onClick={handleGoBack}
           aria-label="Назад к списку дней"
           type="button"
         >
@@ -46,14 +68,23 @@ export default function DetailScreen({ plan, onToggleChapter }: DetailScreenProp
         <h2 className="detail-title">
           День {day.day}: {day.title}
         </h2>
-      </div>
-      <div id="list">
-          {day.readings.map((dayChapter:BibleReading) => (
-            <div key={dayChapter.bookKey + dayChapter.chapter}>
-                <ChapterCard chapter={dayChapter.chapter} bookKey={dayChapter.bookKey} bookName={dayChapter.bookName} completed={dayChapter.completed} onToggleChapter={onToggleChapter}/>
+      </header>
+
+      <main className="detail-content" ref={contentRef}>
+        <div id="list">
+          {day.readings.map((dayChapter: BibleReading) => (
+            <div key={`${dayChapter.bookKey}-${dayChapter.chapter}`}>
+              <ChapterCard
+                chapter={dayChapter.chapter}
+                bookKey={dayChapter.bookKey}
+                bookName={dayChapter.bookName}
+                completed={dayChapter.completed}
+                onToggleChapter={onToggleChapter}
+              />
             </div>
           ))}
         </div>
+      </main>
     </div>
   );
 }
