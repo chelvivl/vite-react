@@ -10,6 +10,11 @@ import { MainScreenProvider } from './contexts/MainScreenStateContext';
 
 function App() {
 
+
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+
   const [plan, setPlan] = useState<ReadingDay[]>([]);
 
     // Загрузка при старте
@@ -117,7 +122,6 @@ function App() {
   setPlan(adjustedPlan);
   localStorage.setItem('bibleReadingPlan', JSON.stringify(adjustedPlan));
 };
-
   return (
  <MainScreenProvider>
     <BrowserRouter>
