@@ -136,7 +136,7 @@ function App() {
 
       </div>
     </BrowserRouter>
-       </MainScreenProvider>
+   </MainScreenProvider>
   );
 }
 
