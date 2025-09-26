@@ -16,7 +16,19 @@ export default function DayList({ plan, onToggle }: DayListProps) {
   const todayISO = new Date().toISOString().split("T")[0];
 
   return (
-    <div className="day-list">
+    <div
+        style={{
+          position: 'absolute',
+          top: '56px',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          overflowY: 'auto',
+          paddingTop: '16px',
+          paddingRight: '16px',
+          paddingLeft: '16px',
+        }}
+      >
       {plan.map((day: ReadingDay, index: number) => {
         const isOverdue = day.date < todayISO && !day.completed;
 

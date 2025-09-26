@@ -62,19 +62,22 @@ const BibleChapterViewer = () => {
         </p>
       )}
 
-      <div
+<div
         style={{
-          marginTop: '56px',
-          padding: '0px',
-          fontSize: '1.125rem', // ~18px
-          lineHeight: 1.4,     // ← меньше расстояние между строками
-          textAlign: 'justify', // ← выравнивание по ширине
+          position: 'absolute',
+          top: '56px',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          overflowY: 'auto',
+          paddingTop: '16px',
+          paddingRight: '16px',
+          paddingLeft: '16px',
+                    textAlign: 'justify', // ← выравнивание по ширине
           textJustify: 'inter-word',
-          hyphens: 'auto',
-          WebkitHyphens: 'auto',
-          MozHyphens: 'auto'
         }}
       >
+
         {verses.length > 0 ? (
           verses.map((v) => (
             <span

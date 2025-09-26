@@ -34,7 +34,19 @@ export default function DetailScreen({ plan, onToggleChapter }: DetailScreenProp
   return (
     <div style={{paddingTop: '56px'}}>
       <TopBar title={title} showBackButton={true}/>
-      <div className="detail-list">
+      <div
+        style={{
+          position: 'absolute',
+          top: '56px',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          overflowY: 'auto',
+          paddingTop: '16px',
+          paddingRight: '16px',
+          paddingLeft: '16px',
+        }}
+      >
         {day.readings.map((dayChapter: BibleReading) => (
           <ChapterCard
             key={`${dayChapter.bookKey}-${dayChapter.chapter}`}

@@ -18,42 +18,19 @@ export default function MainScreen({ plan, onToggle, onResetAll, continueFromDay
   const [modalOpen, setModalOpen] = useState(false);
   const [clearAll, setClearAll] = useState(false);
   const [scrollToDay, setScrollToDay] = useState<number | null>(null);
-  const [bannerVisible, setBannerVisible] = useState(false);
 
   const todayISO = new Date().toISOString().split('T')[0];
-
-  // === Определяем статус ===
-  let statusMessage = '';
-  let statusClass = '';
 
   const firstUncompleted = plan.find(day => !day.completed);
 
   if (!firstUncompleted) {
-    statusMessage = '🎉 Поздравляем! Ты завершил весь план чтения!';
-    statusClass = 'status-completed';
   } else {
     const firstUncompletedDate = new Date(firstUncompleted.date);
     const today = new Date(todayISO);
     const timeDiff = firstUncompletedDate.getTime() - today.getTime();
     const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-
-    if (dayDiff > 0) {
-      statusMessage = `✅ Опережение на ${dayDiff} дн.`;
-      statusClass = 'status-ahead';
-    } else if (dayDiff < 0) {
-      statusMessage = `⚠️ Отставание на ${-dayDiff} дн.`;
-      statusClass = 'status-behind';
-    } else {
-      statusMessage = '📅 Сегодня не прочитано';
-      statusClass = 'status-on-time';
-    }
+        console.log(dayDiff)
   }
-
-  // === Анимация появления баннера ===
-  useEffect(() => {
-    const timer = setTimeout(() => setBannerVisible(true), 100);
-    return () => clearTimeout(timer);
-  }, [statusMessage]);
 
   // === Скролл ===
   useEffect(() => {
@@ -74,11 +51,13 @@ export default function MainScreen({ plan, onToggle, onResetAll, continueFromDay
   };
 
   return (
-    <div style={{paddingTop: '56px', paddingLeft: '15px', paddingRight: '15px'}}>
+    <div style={{
+    paddingTop: '56px',
+    paddingLeft: '15px',
+    paddingRight: '15px'
+    }}>
       <TopBar title={"Библия за 111 дней"} showBackButton={false}/>
-           <div className={`status-banner ${statusClass} ${bannerVisible ? 'status-banner-visible' : ''}`}>
-        {statusMessage}
-      </div>
+
 
 
       <DayList plan={plan} onToggle={onToggle} />
