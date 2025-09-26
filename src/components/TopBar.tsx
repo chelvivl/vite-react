@@ -25,10 +25,17 @@ export default function TopBar({ title, showBackButton = true, showMenuButton = 
         padding: '0 0px',
         backgroundColor: '#667eea',
         zIndex: 1000,
+        pointerEvents: 'auto',
+        WebkitUserSelect: 'none',
+        userSelect: 'none',
         fontSize: '17px',
+        touchAction: 'none',
         fontWeight: 600,
         color: 'white'
       }}
+      onTouchStart={(e) => e.stopPropagation()}
+        onTouchMove={(e) => e.stopPropagation()}
+        onTouchEnd={(e) => e.stopPropagation()}
     >
       {!showBackButton && (
         <div style={{ width: '56px' }}></div>
