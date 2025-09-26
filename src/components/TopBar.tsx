@@ -20,7 +20,7 @@ export default function TopBar({ title, showBackButton = true } : TopBarProps) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '0 16px',
+        padding: '0 0px',
         backgroundColor: '#667eea',
         zIndex: 1000,
         fontSize: '17px',
@@ -32,8 +32,8 @@ export default function TopBar({ title, showBackButton = true } : TopBarProps) {
         <button
           onClick={() => navigate(-1)}
           style={{
-            width: '36px',
-            height: '36px',
+            width: '56px',
+            height: '56px',
             borderRadius: '50%',
             border: 'none',
             background: 'transparent',
@@ -45,7 +45,7 @@ export default function TopBar({ title, showBackButton = true } : TopBarProps) {
           }}
           aria-label="Назад"
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"   style={{ transform: 'scale(1.5)' }} >
             <path d="M15 6L9 12L15 18" stroke="currentColor" strokeWidth="2" />
           </svg>
         </button>
@@ -64,7 +64,7 @@ export default function TopBar({ title, showBackButton = true } : TopBarProps) {
         {title}
       </h3>
       {showBackButton && (
-       <div style={{ width: '36px' }}></div>
+       <div style={{ width: '56px' }}></div>
       )}
     </header>
   );
