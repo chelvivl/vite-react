@@ -1,46 +1,70 @@
+// src/components/TopBar.jsx
 import { useNavigate } from 'react-router-dom';
-import './TopBar.css';
 
 interface TopBarProps {
   title: string;
-  showBackButton?: boolean;
+  showBackButton: boolean;
 }
 
-export default function TopBar({ title, showBackButton = true }: TopBarProps) {
+export default function TopBar({ title, showBackButton = true } : TopBarProps) {
   const navigate = useNavigate();
 
-  const handleBack = () => {
-    navigate(-1);
-  };
-
   return (
-    <div className="detail-header">
+    <header
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: '56px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 16px',
+        backgroundColor: 'white',
+        borderBottom: '1px solid #eee',
+        zIndex: 1000,
+        fontSize: '17px',
+        fontWeight: 600,
+        color: '#000'
+      }}
+    >
       {showBackButton && (
-           <button
-          className="back-button"
-          onClick={() => handleBack()}
-          aria-label="Назад к списку дней"
-          type="button"
+        <button
+          onClick={() => navigate(-1)}
+          style={{
+            width: '36px',
+            height: '36px',
+            borderRadius: '50%',
+            border: 'none',
+            background: 'transparent',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#007AFF',
+            cursor: 'pointer'
+          }}
+          aria-label="Назад"
         >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M15 6L9 12L15 18"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M15 6L9 12L15 18" stroke="currentColor" strokeWidth="2" />
           </svg>
         </button>
       )}
-      <h1 className="detail-title">{title}</h1>
-      <div className="top-bar-spacer"></div> {/* для баланса */}
-    </div>
+      <h3
+        style={{
+          flex: 1,
+          textAlign: 'center',
+          margin: 0,
+          padding: '0 16px',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis'
+        }}
+      >
+        {title}
+      </h3>
+      <div style={{ width: '36px' }}></div>
+    </header>
   );
 }

@@ -52,7 +52,7 @@ const BibleChapterViewer = () => {
   }, [bookId, chapterId]);
 
   return (
-    <div style={{ padding: '20px', maxWidth: '720px', margin: '0 auto' }}>
+    <div style={{ padding: '20px', margin: '0 auto' }}>
 
       <TopBar title={bookName + " " + chapterId} showBackButton={true}/>
 
@@ -64,7 +64,7 @@ const BibleChapterViewer = () => {
 
       <div
         style={{
-          marginTop: '20px',
+          marginTop: '56px',
           padding: '0px',
           fontSize: '1.125rem', // ~18px
           lineHeight: 1.4,     // ← меньше расстояние между строками

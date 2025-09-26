@@ -32,7 +32,7 @@
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch; /* плавная прокрутка на iOS */
-  padding: 16px 0;
+  padding: 15px 15px 0px 15px;
 }
 
 /* Прокручиваемая область под TopBar */

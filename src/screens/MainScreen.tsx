@@ -74,16 +74,12 @@ export default function MainScreen({ plan, onToggle, onResetAll, continueFromDay
   };
 
   return (
-    <div className="detail-view">
+    <div style={{paddingTop: '56px', paddingLeft: '15px', paddingRight: '15px'}}>
       <TopBar title={"Библия за 111 дней"} showBackButton={false}/>
            <div className={`status-banner ${statusClass} ${bannerVisible ? 'status-banner-visible' : ''}`}>
         {statusMessage}
       </div>
-      <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)}>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-        </svg>
-      </button>
+
 
       <DayList plan={plan} onToggle={onToggle} />
 

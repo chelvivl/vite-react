@@ -32,7 +32,7 @@ export default function DetailScreen({ plan, onToggleChapter }: DetailScreenProp
   const title = `День ${day.day}: ${day.title}`;
 
   return (
-    <div className="detail-view">
+    <div style={{paddingTop: '56px'}}>
       <TopBar title={title} showBackButton={true}/>
       <div className="detail-list">
         {day.readings.map((dayChapter: BibleReading) => (
