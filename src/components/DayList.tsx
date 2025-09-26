@@ -1,5 +1,7 @@
 import DayItem from "./DayItem";
 import type { ReadingDay } from "../utils/types";
+import { useEffect, useRef } from 'react';
+import { useMainScreenState, useMainScreenActions } from '../contexts/MainScreenStateContext';
 
 interface DayListProps {
   plan: ReadingDay[];
@@ -15,8 +17,32 @@ const getMonthName = (dateStr: string): string => {
 export default function DayList({ plan, onToggle }: DayListProps) {
   const todayISO = new Date().toISOString().split("T")[0];
 
+  const { dayListScrollTop } = useMainScreenState();
+  const { setDayListScrollTop } = useMainScreenActions();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (containerRef.current) {
+          containerRef.current.scrollTop = dayListScrollTop;
+        }
+      }, []);
+
+      // Сохранять прокрутку при скролле
+      useEffect(() => {
+        const el = containerRef.current;
+        if (!el) return;
+
+        const handleScroll = () => {
+          setDayListScrollTop(el.scrollTop);
+        };
+
+        el.addEventListener('scroll', handleScroll);
+        return () => el.removeEventListener('scroll', handleScroll);
+  }, [setDayListScrollTop]);
+
   return (
     <div
+       ref={containerRef}
         style={{
           position: 'absolute',
           top: '56px',

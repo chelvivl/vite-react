@@ -14,16 +14,8 @@ const BibleChapterViewer = () => {
   const bookName = location.state?.bookName;
   const bookId = location.state?.bookId;
 
-   console.log("Книга: " + bookId)
-   console.log("Глава: " + chapterId)
-
   const [verses, setVerses] = useState<Verse[]>([]); // ← явно указываем тип!
   const [error, setError] = useState<string | null>(null);
-
-      // 🔥 Сбрасываем прокрутку наверх при входе на экран
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []); // Пустой массив = выполнится один раз при монтировании
 
   const loadChapter = () => {
     setError("");

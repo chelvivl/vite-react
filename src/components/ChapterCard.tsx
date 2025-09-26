@@ -22,8 +22,6 @@ export default function ChapterCard({
       onToggleChapter(bookKey, chapter)
   };
 
-   console.log("Книга из списка: " + bookId)
-
   const handleClick = () => {
     navigate('/chapter', {
       state: { chapter: chapter, bookName: bookName, bookId: bookId }, // 👈 передаём число

@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { generateBibleReadingPlan } from './utils/generateReadingPlan'
 import { adjustPlanDates } from './utils/utils'
 import type { ReadingDay } from './utils/types';
+import { MainScreenProvider } from './contexts/MainScreenStateContext';
 
 function App() {
 
@@ -118,7 +119,7 @@ function App() {
 };
 
   return (
-
+ <MainScreenProvider>
     <BrowserRouter>
       <div style={{
       minHeight: '100dvh',
@@ -131,6 +132,7 @@ function App() {
 
       </div>
     </BrowserRouter>
+       </MainScreenProvider>
   );
 }
 

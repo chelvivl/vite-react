@@ -1,6 +1,5 @@
 // src/components/DetailScreen.tsx (или где он у тебя)
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
 import TopBar from '../components/TopBar'; // ← подключи TopBar
 import ChapterCard from '../components/ChapterCard';
 import type { BibleReading, ReadingDay } from '../utils/types';
@@ -15,12 +14,6 @@ export default function DetailScreen({ plan, onToggleChapter }: DetailScreenProp
   const location = useLocation();
   const selectedDay = location.state?.number;
 
-      // 🔥 Сбрасываем прокрутку наверх при входе на экран
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []); // Пустой массив = выполнится один раз при монтировании
-
-  // Защита от ошибок
   if (selectedDay === undefined || !plan[selectedDay]) {
     navigate('/'); // или куда-то безопасно
     return null;
