@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainScreen from './screens/MainScreen';
 import DetailScreen from './screens/DetailScreen';
 import ChapterScreen from './screens/ChapterScreen';
-import TestScreen from './screens/TestScreen';
 import { useState, useEffect } from 'react';
 import { generateBibleReadingPlan } from './utils/generateReadingPlan'
 import { adjustPlanDates } from './utils/utils'
@@ -128,7 +127,6 @@ function App() {
          <Route path="/" element={<MainScreen plan={plan} onToggle={toggleDay} onResetAll={resetProgress} continueFromDay={continueFromDay}/>} />
          <Route path="/detail" element={<DetailScreen plan={plan} onToggleChapter={toggleChapter}/>} />
          <Route path="/chapter" element={<ChapterScreen />} />
-         <Route path="/test" element={<TestScreen />} />
          </Routes>
 
       </div>
