@@ -4,9 +4,11 @@ import { useNavigate } from 'react-router-dom';
 interface TopBarProps {
   title: string;
   showBackButton: boolean;
+  showMenuButton: boolean;
+  onMenuClick: () => void;
 }
 
-export default function TopBar({ title, showBackButton = true } : TopBarProps) {
+export default function TopBar({ title, showBackButton = true, showMenuButton = false, onMenuClick } : TopBarProps) {
   const navigate = useNavigate();
 
   return (
@@ -28,6 +30,9 @@ export default function TopBar({ title, showBackButton = true } : TopBarProps) {
         color: 'white'
       }}
     >
+      {!showBackButton && (
+        <div style={{ width: '56px' }}></div>
+      )}
       {showBackButton && (
         <button
           onClick={() => navigate(-1)}
@@ -63,8 +68,33 @@ export default function TopBar({ title, showBackButton = true } : TopBarProps) {
       >
         {title}
       </h3>
-      {showBackButton && (
-       <div style={{ width: '56px' }}></div>
+       {showMenuButton && (
+        <button
+
+         onClick={(e) => {
+ e.stopPropagation();
+         onMenuClick()
+          }}
+          style={{
+            width: '56px',
+            height: '56px',
+            borderRadius: '50%',
+            border: 'none',
+            background: 'transparent',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+            cursor: 'pointer'
+          }}
+          aria-label="Назад"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>  </svg>
+        </button>
+      )}
+       {!showMenuButton && (
+        <div style={{ width: '56px' }}></div>
       )}
     </header>
   );

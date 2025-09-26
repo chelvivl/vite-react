@@ -33,7 +33,7 @@ export default function DetailScreen({ plan, onToggleChapter }: DetailScreenProp
 
   return (
     <div style={{paddingTop: '56px'}}>
-      <TopBar title={title} showBackButton={true}/>
+      <TopBar title={title} showBackButton={true} showMenuButton={false} onMenuClick={()=>{}} />
       <div
         style={{
           position: 'absolute',
