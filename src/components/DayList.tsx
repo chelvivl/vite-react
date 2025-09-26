@@ -27,6 +27,7 @@ export default function DayList({ plan, onToggle }: DayListProps) {
           paddingTop: '16px',
           paddingRight: '16px',
           paddingLeft: '16px',
+          backgroundColor: '#F6F6F6'
         }}
       >
       {plan.map((day: ReadingDay, index: number) => {
@@ -38,7 +39,7 @@ export default function DayList({ plan, onToggle }: DayListProps) {
           day.date.substring(0, 7) !== plan[index - 1].date.substring(0, 7); // сравниваем YYYY-MM
 
         return (
-          <div key={day.day}>
+          <div key={day.day} style={{color: 'black'}}>
             {index != 0 && showMonthHeader && (
               <div className="month-header">
                 {getMonthName(day.date)}

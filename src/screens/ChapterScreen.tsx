@@ -75,6 +75,7 @@ const BibleChapterViewer = () => {
           paddingLeft: '16px',
                     textAlign: 'justify', // ← выравнивание по ширине
           textJustify: 'inter-word',
+             backgroundColor: '#F6F6F6'
         }}
       >
 
@@ -85,6 +86,7 @@ const BibleChapterViewer = () => {
               style={{
                 display: 'block',
                 marginBottom: '8px',
+                color: 'black',
                 textIndent: '1em' // отступ первой строки (по классике)
               }}
             >
@@ -94,7 +96,8 @@ const BibleChapterViewer = () => {
                   fontSize: '1.1em',
                   color: '#2c3e50',
                   marginRight: '6px',
-                  verticalAlign: 'baseline'
+                  verticalAlign: 'baseline',
+
                 }}
               >
                 {v.VerseId}

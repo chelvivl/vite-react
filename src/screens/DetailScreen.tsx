@@ -45,6 +45,7 @@ export default function DetailScreen({ plan, onToggleChapter }: DetailScreenProp
           paddingTop: '16px',
           paddingRight: '16px',
           paddingLeft: '16px',
+             backgroundColor: '#F6F6F6'
         }}
       >
         {day.readings.map((dayChapter: BibleReading) => (

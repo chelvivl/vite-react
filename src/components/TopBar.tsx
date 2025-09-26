@@ -21,12 +21,11 @@ export default function TopBar({ title, showBackButton = true } : TopBarProps) {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '0 16px',
-        backgroundColor: 'white',
-        borderBottom: '1px solid #eee',
+        backgroundColor: '#667eea',
         zIndex: 1000,
         fontSize: '17px',
         fontWeight: 600,
-        color: '#000'
+        color: 'white'
       }}
     >
       {showBackButton && (
@@ -41,7 +40,7 @@ export default function TopBar({ title, showBackButton = true } : TopBarProps) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#007AFF',
+            color: 'white',
             cursor: 'pointer'
           }}
           aria-label="Назад"
@@ -64,7 +63,9 @@ export default function TopBar({ title, showBackButton = true } : TopBarProps) {
       >
         {title}
       </h3>
-      <div style={{ width: '36px' }}></div>
+      {showBackButton && (
+       <div style={{ width: '36px' }}></div>
+      )}
     </header>
   );
 }

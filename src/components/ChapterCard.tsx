@@ -42,7 +42,7 @@ export default function ChapterCard({
     >
       {/* Текст главы */}
       <div className="day-text" style={{ textAlign: 'left', flex: 1 }}>
-        <strong>{bookName} {chapter}</strong>
+        <strong style={{color: 'black'}}>{bookName} {chapter}</strong>
       </div>
 
       {/* Чекбокс справа */}

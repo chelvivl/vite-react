@@ -64,9 +64,9 @@ return (
       handleClick(dayIndex);
     }}
   >
-    <div className="day-text">
+    <div className="day-text" style={{color: 'black'}}>
       <strong>День {dayNumber}</strong>: {text}<br />
-      <small>
+      <small style={{color: '#6D6D6D'}}>
         {dateStr}
         {isCurrentDay && (
           <span className="current-day-label"> ← Сегодня</span>
@@ -115,7 +115,7 @@ return (
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <circle cx="12" cy="12" r="10" fill="transparent" stroke="rgba(255,255,255,0.6)" strokeWidth="2" />
+          <circle cx="12" cy="12" r="10" fill="transparent" stroke="#D1D1D1" strokeWidth="2" />
         </svg>
       )}
     </div>
