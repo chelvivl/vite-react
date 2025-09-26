@@ -41,7 +41,7 @@ export default function ChapterCard({
       }}
     >
       {/* Текст главы */}
-      <div className="day-text" style={{ textAlign: 'left', flex: 1 }}>
+      <div className="day-text" style={{ textAlign: 'left', flex: 1, color: 'black' }}>
         <div style={{color: 'black'}}>{bookName} {chapter}</div>
       </div>
 

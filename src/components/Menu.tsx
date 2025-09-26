@@ -38,13 +38,13 @@ export default function Menu({
         onContinue();
         onClose();
       }}>
-        📖 Продолжить с дня...
+        Продолжить с дня
       </div>
       <div className="menu-item" onClick={() => {
         onReset();
         onClose();
       }}>
-        🗑️ Сбросить всё
+        Сбросить всё
       </div>
     </div>
   );
