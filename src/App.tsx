@@ -121,7 +121,7 @@ function App() {
 
     <BrowserRouter>
       <div style={{
-      minHeight: '100vh',
+      minHeight: '100dvh',
     }}>
           <Routes>
          <Route path="/" element={<MainScreen plan={plan} onToggle={toggleDay} onResetAll={resetProgress} continueFromDay={continueFromDay}/>} />
