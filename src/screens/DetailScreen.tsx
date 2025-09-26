@@ -29,7 +29,7 @@ export default function DetailScreen({ plan, onToggleChapter }: DetailScreenProp
   const day = plan[selectedDay];
 
   // Заголовок для TopBar
-  const title = `День ${day.day}: ${day.title}`;
+  const title = `День ${day.day}`;
 
   return (
     <div style={{paddingTop: '56px'}}>
