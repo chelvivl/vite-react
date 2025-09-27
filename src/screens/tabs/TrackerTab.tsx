@@ -77,7 +77,7 @@ const handleTouchMove = (e: React.TouchEvent | React.MouseEvent) => {
   }, [trackers.length]);
 
   return (
-    <div>
+    <div style={{overflow: 'hidden'}}>
       <TopBar
         title="Трекеры"
         showBackButton={false}
