@@ -3,10 +3,12 @@
 .main-content {
   padding-bottom: 90px; /* чуть больше, т.к. панель выше */
   padding-top: 16px;
-  min-height: calc(100vh - 90px);
+  min-height: calc(100dvh - 90px);
   pointer-events: 'auto',
   webkit-user-select: 'none',
   user-select: 'none',
+  overflow: hidden;
+  overscroll-behavior: none;
   touchAction: 'none',
 }
 
