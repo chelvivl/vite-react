@@ -48,7 +48,7 @@ export default function DayList({ plan, onToggle }: DayListProps) {
           top: '56px',
           left: 0,
           right: 0,
-          bottom: 0,
+          bottom: '90px',
           overflowY: 'auto',
           paddingTop: '16px',
           paddingRight: '16px',

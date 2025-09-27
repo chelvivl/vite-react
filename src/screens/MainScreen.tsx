@@ -51,11 +51,7 @@ export default function MainScreen({ plan, onToggle, onResetAll, continueFromDay
   };
 
   return (
-    <div style={{
-    paddingTop: '56px',
-    paddingLeft: '15px',
-    paddingRight: '15px'
-    }}>
+    <div>
       <TopBar title={"Библия за 111 дней"} showBackButton={false} showMenuButton={true} onMenuClick={ () => {
             setMenuOpen(!menuOpen)
       }
