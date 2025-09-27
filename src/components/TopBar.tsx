@@ -28,8 +28,8 @@ export default function TopBar({ title, showBackButton = true, showMenuButton = 
         pointerEvents: 'auto',
         WebkitUserSelect: 'none',
         userSelect: 'none',
-        fontSize: '17px',
         touchAction: 'none',
+        fontSize: '17px',
         fontWeight: 600,
         color: 'white'
       }}

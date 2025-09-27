@@ -4,6 +4,10 @@
   padding-bottom: 90px; /* чуть больше, т.к. панель выше */
   padding-top: 16px;
   min-height: calc(100vh - 90px);
+  pointer-events: 'auto',
+  webkit-user-select: 'none',
+  user-select: 'none',
+  touchAction: 'none',
 }
 
 .bottom-nav {
