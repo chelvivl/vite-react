@@ -1,7 +1,14 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 import MainScreen from './screens/MainScreen';
 import DetailScreen from './screens/DetailScreen';
 import ChapterScreen from './screens/ChapterScreen';
+
+import MainLayout from './layout/MainLayout';
+
+import BibleTab from './screens/tabs/BibleTab';
+import TrackerTab from './screens/tabs/TrackerTab';
+
 import { useState, useEffect } from 'react';
 import { generateBibleReadingPlan } from './utils/generateReadingPlan'
 import { adjustPlanDates } from './utils/utils'
@@ -129,7 +136,12 @@ function App() {
       minHeight: '100dvh',
     }}>
           <Routes>
-         <Route path="/" element={<MainScreen plan={plan} onToggle={toggleDay} onResetAll={resetProgress} continueFromDay={continueFromDay}/>} />
+           {/* Вложенные маршруты с общей нижней навигацией */}
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<BibleTab />} />
+          <Route path="plan" element={<MainScreen plan={plan} onToggle={toggleDay} onResetAll={resetProgress} continueFromDay={continueFromDay}/>} />
+          <Route path="tracker" element={<TrackerTab />} />
+        </Route>
          <Route path="/detail" element={<DetailScreen plan={plan} onToggleChapter={toggleChapter}/>} />
          <Route path="/chapter" element={<ChapterScreen />} />
          </Routes>
