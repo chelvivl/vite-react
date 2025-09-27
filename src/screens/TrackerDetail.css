@@ -1,0 +1,56 @@
+/* src/screens/TrackerDetail.css */
+.tracker-detail-content {
+  padding: 16px;
+  background-color: #f6f6f6;
+  height: 100dvh;
+  top: 56px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* плавный скролл на iOS */
+}
+
+.tracker-detail-content h2 {
+  margin: 0 0 20px;
+  font-size: 20px;
+  color: #333;
+}
+
+.book-item {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.book-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.book-info h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: #333;
+}
+
+.book-info span {
+  color: #666;
+  font-size: 14px;
+}
+
+.book-progress-bar {
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.book-progress-fill {
+  height: 100%;
+  background: #667eea;
+  transition: width 0.3s;
+}

@@ -7,11 +7,13 @@ import CircularProgress from '../../components/CircularProgress';
 import '../../components/Modal.css';
 import './TrackerTab.css';
 import { IoBookOutline } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
 
 // Размер кнопки удаления (в px)
 const DELETE_BUTTON_WIDTH = 80;
 
 export default function TrackerTab() {
+    const navigate = useNavigate();
   const { trackers, createTracker, deleteTracker } = useTrackers();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newName, setNewName] = useState('');
@@ -111,7 +113,15 @@ const handleTouchMove = (e: React.TouchEvent | React.MouseEvent) => {
   const currentOffset = isSwiped ? swipeOffset : 0;
 
   return (
-    <div key={tracker.id} className="tracker-item" style={{ position: 'relative', overflow: 'hidden' }}>
+    <div key={tracker.id}
+    className="tracker-item"
+    style={{ position: 'relative', overflow: 'hidden' }}
+    onClick={() => {
+      // Не реагировать при свайпе
+      if (activeSwipeId === tracker.id && swipeOffset < -10) return;
+      navigate(`/tracker/${tracker.id}`);
+    }}
+    >
       {/* Кнопка удаления */}
       <div
         className="delete-button"
