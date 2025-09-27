@@ -19,6 +19,7 @@
   left: 0;
   right: 0;
   display: flex;
+  overscroll: none
   justify-content: space-around;
   align-items: center;
   height: 90px; /* увеличена под текст */

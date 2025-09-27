@@ -133,7 +133,7 @@ function App() {
  <MainScreenProvider>
     <BrowserRouter>
       <div style={{
-      minHeight: '100dvh',
+      height: '100dvh', overflow: 'hidden'
     }}>
           <Routes>
            {/* Вложенные маршруты с общей нижней навигацией */}
