@@ -1,6 +1,7 @@
 /* src/layouts/MainLayout.css */
 
 .main-content {
+  position: 'absolute',
   padding-bottom: 90px; /* чуть больше, т.к. панель выше */
   padding-top: 16px;
   min-height: calc(100dvh - 90px);
