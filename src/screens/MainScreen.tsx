@@ -3,6 +3,7 @@ import DayList from '../components/DayList';
 import Menu from '../components/Menu';
 import TopBar from '../components/TopBar'; // ← подключи TopBar
 import type { ReadingDay } from '../utils/types';
+import { FaBars } from 'react-icons/fa';
 
 import '../App.css';
 
@@ -52,7 +53,12 @@ export default function MainScreen({ plan, onToggle, onResetAll, continueFromDay
 
   return (
     <div>
-      <TopBar title={"Библия за 111 дней"} showBackButton={false} showMenuButton={true} onMenuClick={ () => {
+      <TopBar
+           title={"Библия за 111 дней"}
+           showBackButton={false}
+           showRightButton={true}
+           rightIcon={<FaBars size={20}/>}
+           onRightClick={ () => {
             setMenuOpen(!menuOpen)
       }
       }/>

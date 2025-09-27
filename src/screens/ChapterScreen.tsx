@@ -46,7 +46,7 @@ const BibleChapterViewer = () => {
   return (
     <div style={{ padding: '20px', margin: '0 auto' }}>
 
-      <TopBar title={bookName + " " + chapterId} showBackButton={true} showMenuButton={false} onMenuClick={()=>{}} />
+      <TopBar title={bookName + " " + chapterId} showBackButton={true} />
 
       {error && (
         <p style={{ color: 'red', textAlign: 'center', marginTop: '20px' }}>

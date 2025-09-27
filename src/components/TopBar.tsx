@@ -1,14 +1,23 @@
-// src/components/TopBar.jsx
+// src/components/TopBar.tsx
 import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import { IoChevronBack, IoEllipsisVertical } from 'react-icons/io5';
 
 interface TopBarProps {
   title: string;
-  showBackButton: boolean;
-  showMenuButton: boolean;
-  onMenuClick: () => void;
+  showBackButton?: boolean;
+  showRightButton?: boolean;
+  rightIcon?: React.ReactNode;
+  onRightClick?: () => void;
 }
 
-export default function TopBar({ title, showBackButton = true, showMenuButton = false, onMenuClick } : TopBarProps) {
+export default function TopBar({
+  title,
+  showBackButton = true,
+  showRightButton = false,
+  rightIcon,
+  onRightClick
+}: TopBarProps) {
   const navigate = useNavigate();
 
   return (
@@ -25,43 +34,26 @@ export default function TopBar({ title, showBackButton = true, showMenuButton = 
         padding: '0 0px',
         backgroundColor: '#667eea',
         zIndex: 1000,
-        pointerEvents: 'auto',
-        WebkitUserSelect: 'none',
-        userSelect: 'none',
-        touchAction: 'none',
         fontSize: '17px',
         fontWeight: 600,
-        color: 'white'
+        color: 'white',
+        boxSizing: 'border-box'
       }}
-      onTouchStart={(e) => e.stopPropagation()}
-        onTouchMove={(e) => e.stopPropagation()}
-        onTouchEnd={(e) => e.stopPropagation()}
     >
-      {!showBackButton && (
-        <div style={{ width: '56px' }}></div>
-      )}
-      {showBackButton && (
+      {/* Кнопка "Назад" */}
+      {showBackButton ? (
         <button
           onClick={() => navigate(-1)}
-          style={{
-            width: '56px',
-            height: '56px',
-            borderRadius: '50%',
-            border: 'none',
-            background: 'transparent',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            cursor: 'pointer'
-          }}
+          style={buttonStyle}
           aria-label="Назад"
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"   style={{ transform: 'scale(1.5)' }} >
-            <path d="M15 6L9 12L15 18" stroke="currentColor" strokeWidth="2" />
-          </svg>
+          <IoChevronBack size={24} color="white" />
         </button>
+      ) : (
+        <div style={{ width: '56px' }} />
       )}
+
+      {/* Заголовок */}
       <h3
         style={{
           flex: 1,
@@ -75,34 +67,37 @@ export default function TopBar({ title, showBackButton = true, showMenuButton = 
       >
         {title}
       </h3>
-       {showMenuButton && (
-        <button
 
-         onClick={(e) => {
- e.stopPropagation();
-         onMenuClick()
+      {/* Правая кнопка */}
+      {showRightButton ? (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onRightClick?.();
           }}
-          style={{
-            width: '56px',
-            height: '56px',
-            borderRadius: '50%',
-            border: 'none',
-            background: 'transparent',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            cursor: 'pointer'
-          }}
-          aria-label="Назад"
+          style={buttonStyle}
+          aria-label="Меню"
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>  </svg>
+          {rightIcon || <IoEllipsisVertical size={24} color="white" />}
         </button>
-      )}
-       {!showMenuButton && (
-        <div style={{ width: '56px' }}></div>
+      ) : (
+        <div style={{ width: '56px' }} />
       )}
     </header>
   );
 }
+
+const buttonStyle: React.CSSProperties = {
+  width: '56px',
+  height: '56px',
+  borderRadius: '50%',
+  border: 'none',
+  background: 'transparent',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: 'white',
+  cursor: 'pointer',
+  padding: 0,
+  margin: 0,
+};

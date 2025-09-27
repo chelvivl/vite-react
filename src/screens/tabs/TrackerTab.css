@@ -1,0 +1,119 @@
+/* src/screens/TrackerTab.css */
+
+.trackers-list {
+  padding: 16px;
+  padding-top: 56px;    /* под TopBar */
+  padding-bottom: 90px; /* под BottomNav */
+  min-height: 100dvh;
+  background-color: #f6f6f6;
+  box-sizing: border-box;
+}
+
+/* Пустое состояние — по левому краю */
+.empty-state {
+  color: #777;
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: left; /* ← важно */
+  padding: 20px 0;
+  margin: 0; /* убираем лишние отступы */
+}
+
+.empty-state p {
+  margin: 8px 0;
+}
+
+/* Каждый элемент трекера */
+.tracker-item {
+  background: white;
+  border-radius: 12px;
+  padding: 0px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  /* Убираем любое центрирование */
+  text-align: left;
+}
+
+/* Строка: круг + текст */
+.tracker-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  /* Ничего не центрируем — всё по левому краю по умолчанию */
+}
+
+.tracker-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.tracker-text h4 {
+  margin: 0 0 4px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #333;
+  /* Убедимся, что заголовок тоже по левому краю */
+  text-align: left;
+}
+
+.tracker-text p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+  text-align: left;
+}
+
+/* Пустое состояние — красивое и центрированное */
+.empty-trackers {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  min-height: calc(100dvh - 72px - 90px); /* под TopBar и BottomNav */
+  color: #555;
+}
+
+.empty-icon {
+  margin-bottom: 24px;
+  opacity: 0.9;
+}
+
+.empty-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 12px;
+  color: #333;
+}
+
+.empty-subtitle {
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 0 0 32px;
+  color: #777;
+  max-width: 320px;
+}
+
+.empty-create-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.empty-create-btn:hover {
+  background: #5a6fd8;
+}
+
+.empty-create-btn:active {
+  transform: scale(0.98);
+}

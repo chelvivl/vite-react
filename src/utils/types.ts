@@ -1,3 +1,5 @@
+import { OldTestament, NewTestament } from './bibleData'; // ← путь может отличаться!
+
 export interface BibleBook {
   title: string;
   chapters: number;
@@ -17,4 +19,20 @@ export interface ReadingDay {
   title: string;
   readings: BibleReading[];
   completed: boolean;
+}
+
+// types.ts
+export type BookProgress = {
+  [chapter: number]: boolean; // true = прочитано
+};
+
+export type TestamentProgress = {
+  [bookKey in keyof typeof OldTestament | keyof typeof NewTestament]?: BookProgress;
+};
+
+export interface Tracker {
+  id: string;
+  name: string;
+  createdAt: string;
+  progress: TestamentProgress;
 }

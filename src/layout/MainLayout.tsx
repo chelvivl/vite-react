@@ -9,7 +9,7 @@ export default function MainLayout() {
   const tabs = [
     { path: '/', icon: <FaBook size={24} />, label: 'Библия' },
     { path: '/plan', icon: <FaCalendarAlt size={24} />, label: 'План' },
-    { path: '/tracker', icon: <FaChartPie size={24} />, label: 'Трекер' },
+    { path: '/tracker', icon: <FaChartPie size={24} />, label: 'Трекеры' },
   ];
 
   return (

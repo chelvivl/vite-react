@@ -53,8 +53,6 @@ export default function DetailScreen({ plan, onToggleChapter }: DetailScreenProp
       <TopBar
         title={title}
         showBackButton={true}
-        showMenuButton={false}
-        onMenuClick={() => {}}
       />
       <div
         ref={containerRef}
