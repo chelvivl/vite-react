@@ -9,6 +9,7 @@ import MainLayout from './layout/MainLayout';
 import BibleTab from './screens/tabs/BibleTab';
 import TrackerTab from './screens/tabs/TrackerTab';
 import TrackerDetail from './screens/TrackerDetail';
+import BookChapters from './screens/BookChapters';
 
 import { useState, useEffect } from 'react';
 import { generateBibleReadingPlan } from './utils/generateReadingPlan'
@@ -146,6 +147,7 @@ function App() {
          <Route path="/detail" element={<DetailScreen plan={plan} onToggleChapter={toggleChapter}/>} />
          <Route path="/chapter" element={<ChapterScreen />} />
          <Route path="tracker/:id" element={<TrackerDetail />} /> {/* ← новый маршрут */}
+          <Route path="tracker/:trackerId/book/:bookKey" element={<BookChapters />} />
          </Routes>
 
       </div>

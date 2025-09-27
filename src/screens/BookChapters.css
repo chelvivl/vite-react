@@ -1,0 +1,42 @@
+/* src/screens/BookChapters.css */
+.chapters-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 колонки на мобильных */
+  gap: 12px;
+  padding: 16px;
+  padding-top: 72px;    /* под TopBar */
+  padding-bottom: 90px; /* под BottomNav */
+  background-color: #f6f6f6;
+  min-height: 100dvh;
+  box-sizing: border-box;
+}
+
+.chapter-item {
+  aspect-ratio: 1; /* квадратные кнопки */
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  background: white;
+  color: #333;
+  margin: 10px;
+  font-size: 100px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chapter-item:hover {
+  transform: scale(1.03);
+}
+
+.chapter-item.read {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
+/* Адаптивность: на больших экранах — 6 колонок */
+@media (min-width: 768px) {
+  .chapters-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}

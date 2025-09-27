@@ -53,7 +53,7 @@ export default function TrackerDetail() {
           const percent = book.chapters > 0 ? Math.round((readChapters / book.chapters) * 100) : 0;
 
           return (
-            <div key={bookKey} className="book-item">
+            <div key={bookKey} className="book-item" onClick={() => navigate(`/tracker/${tracker.id}/book/${bookKey}`)}>
               <div className="book-info">
                 <h3>{book.title}</h3>
                 <span>{readChapters} / {book.chapters}</span>
