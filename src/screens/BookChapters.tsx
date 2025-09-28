@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import TopBar from '../components/TopBar';
 import { useTrackers } from '../hooks/useTrackers';
 import { ALL_BOOKS } from '../utils/bibleData';
+import { IoCheckmarkDoneCircle } from 'react-icons/io5'; // ← иконка "отметить всё"
 import './BookChapters.css';
 
 // Тип для ключа книги
@@ -12,7 +13,7 @@ type BookKey = keyof typeof ALL_BOOKS;
 export default function BookChapters() {
   const { trackerId, bookKey: bookKeyParam } = useParams<{ trackerId?: string; bookKey?: string }>();
   const navigate = useNavigate();
-  const { trackers, toggleChapter } = useTrackers();
+  const { trackers, toggleChapter, markAllChapters } = useTrackers();
   const [tracker, setTracker] = useState<any>(null);
   const [book, setBook] = useState<any>(null);
   const [bookKey, setBookKey] = useState<BookKey | null>(null);
@@ -54,12 +55,23 @@ export default function BookChapters() {
     toggleChapter(trackerId!, bookKey, chapter);
   };
 
+      // Новая функция: отметить все главы
+  const handleMarkAll = () => {
+    // Проверим, сколько уже прочитано
+    const readCount = Object.values(bookProgress).filter(Boolean).length;
+    const markAsRead = readCount < book.chapters; // если не всё прочитано — отметить всё, иначе снять отметки
+    markAllChapters(trackerId!, bookKey, markAsRead);
+  };
+
+
   return (
     <>
       <TopBar
-        title={book.title}
+        title={book.title + " "+ Math.round((Object.values(bookProgress).filter(Boolean).length / book.chapters) * 100) + "%"}
         showBackButton={true}
-        showRightButton={false}
+        showRightButton={true}
+        rightIcon={<IoCheckmarkDoneCircle size={22} color="white" />}
+        onRightClick={handleMarkAll}
       />
 
       <div style={{
@@ -74,7 +86,7 @@ export default function BookChapters() {
           paddingLeft: '16px',
           paddingBottom: '16px',
           backgroundColor: '#F6F6F6'
-        }}>
+        }} className='chapters-grid'>
         {chapters.map(chapter => {
           const isRead = bookProgress[chapter] || false;
           return (
