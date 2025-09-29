@@ -3,7 +3,6 @@
 /* Убираем абсолютное позиционирование */
 .chapters-grid {
   display: grid;
-  margin-top: 56px;
   grid-template-columns: repeat(5, 1fr); /* ровно 5 колонок */
   gap: 12px; /* фиксированный отступ — всегда одинаковый */
   padding: 16px;
@@ -50,3 +49,13 @@
   font-size: 18px;
   color: #555;
 }
+
+/* Новый контейнер для скролла */
+.book-chapters-scroll-container {
+  height: 100dvh; /* 56px = высота TopBar (предположительно) */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* плавный скролл на iOS */
+}
+
+/* Убедимся, что TopBar не мешает */
+/* Если TopBar имеет фиксированную высоту 56px — всё ок */

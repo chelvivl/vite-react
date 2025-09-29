@@ -58,17 +58,26 @@ export default function BookChapters() {
     markAllChapters(trackerId!, bookKey, markAsRead);
   };
 
-  return (
-    <>
-      <TopBar
+return (
+  <div style={{
+          position: 'absolute',
+          top: '56px',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          overflowY: 'auto',
+          backgroundColor: '#F6F6F6'
+        }}>
+
+<TopBar
         title={`${book.title} ${((Object.values(bookProgress).filter(Boolean).length / book.chapters) * 100).toFixed(1)}%`}
         showBackButton={true}
         showRightButton={true}
         rightIcon={<IoCheckmarkDoneCircle size={22} color="white" />}
         onRightClick={handleMarkAll}
       />
-
-      {/* Обычный блок, без position: absolute */}
+    {/* Скроллируемый контейнер */}
+    <div>
       <div className="chapters-grid">
         {chapters.map(chapter => {
           const isRead = bookProgress[chapter] || false;
@@ -83,6 +92,7 @@ export default function BookChapters() {
           );
         })}
       </div>
-    </>
-  );
+    </div>
+  </div >
+);
 }
