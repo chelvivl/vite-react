@@ -11,7 +11,6 @@ export default function BibleTab() {
   return (
     <div style={{overflow: 'hidden'}}>
       <BibleTopBar
-                title="Чтение Библии"
                 selectedBookKey={selectedBookKey}
                 selectedChapter={selectedChapter}
                 onBookChange={setSelectedBookKey}
