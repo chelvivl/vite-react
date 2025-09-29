@@ -53,7 +53,6 @@ export default function BibleTopBar({
             backgroundColor: 'rgba(0, 0, 0, 0.2)', // темный полупрозрачный фон
             color: 'white',
             outline: 'none',
-            minWidth: '100px',
             WebkitAppearance: 'none', // убирает стрелку на iOS (опционально)
             appearance: 'none',
             backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e")`,
@@ -82,7 +81,6 @@ export default function BibleTopBar({
             backgroundColor: 'rgba(0, 0, 0, 0.2)', // темный полупрозрачный фон
             color: 'white',
             outline: 'none',
-            minWidth: '100px',
             WebkitAppearance: 'none', // убирает стрелку на iOS (опционально)
             appearance: 'none',
             backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e")`,
