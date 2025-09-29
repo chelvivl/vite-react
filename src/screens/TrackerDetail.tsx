@@ -137,7 +137,7 @@ const calculateTestamentProgress = (
               />
             </svg>
             <div className="bible-circle-text">
-              <div className="bible-circle-title">вся библия</div>
+              <div className="bible-circle-title">Вся Библия</div>
               <div className="bible-circle-percent">{totalBibleProgress}%</div>
             </div>
           </div>

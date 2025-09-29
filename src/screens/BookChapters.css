@@ -1,38 +1,52 @@
 /* src/screens/BookChapters.css */
+
+/* Убираем абсолютное позиционирование */
 .chapters-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* ← ровно 4 колонки */
-  gap: 12px;
+  margin-top: 56px;
+  grid-template-columns: repeat(5, 1fr); /* ровно 5 колонок */
+  gap: 12px; /* фиксированный отступ — всегда одинаковый */
   padding: 16px;
-  padding-top: 72px;    /* под TopBar */
-  padding-bottom: 90px; /* под BottomNav */
-  background-color: #f6f6f6;
-
-  box-sizing: border-box;
+  background-color: #F6F6F6;
+  /* НЕТ position: absolute, НЕТ height: 100% */
 }
 
 .chapter-item {
-  aspect-ratio: 1; /* квадрат */
-  border: 2px solid #ddd;
-  border-radius: 12px;
-  background: white;
-  color: #333;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
+  /* Ключевое: позволяет сжиматься меньше содержимого */
+  min-width: 0;
+  min-height: 0;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  aspect-ratio: 1 / 1; /* квадрат */
   display: flex;
   align-items: center;
   justify-content: center;
+  border: none;
+  border-radius: 8px;
+  background-color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
   padding: 0;
 }
 
-.chapter-item:hover {
-  transform: scale(1.03);
+.chapter-item.read {
+  background-color: #667eea;
+  color: white;
 }
 
-.chapter-item.read {
-  background: #667eea;
-  color: white;
-  border-color: #667eea;
+/* Для очень узких экранов */
+@media (max-width: 360px) {
+  .chapter-item {
+    font-size: 12px;
+  }
+}
+
+.loading {
+  padding: 16px;
+  text-align: center;
+  font-size: 18px;
+  color: #555;
 }
