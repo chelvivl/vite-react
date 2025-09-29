@@ -1,56 +1,227 @@
 /* src/screens/TrackerDetail.css */
-.tracker-detail-content {
-  padding: 16px;
-  background-color: #f6f6f6;
-  height: 100dvh;
-  top: 56px;
-  box-sizing: border-box;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch; /* плавный скролл на iOS */
+
+.tracker-detail-wrapper {
+  width: 100%;
+  overflow-x: hidden;
 }
 
-.tracker-detail-content h2 {
-  margin: 0 0 20px;
-  font-size: 20px;
-  color: #333;
+.tracker-detail-content {
+  background-color: #f6f6f6;
+  height: calc(100dvh - 56px);
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* === Круг "вся библия" — отдельная карточка сверху, УВЕЛИЧЕННАЯ === */
+.bible-overall-card {
+  background: white;
+  padding: 24px 0;
+  margin: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  border-radius: 0;
+}
+
+.bible-circle {
+  position: relative;
+  width: 140px;
+  height: 140px;
+}
+
+.bible-circle svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.bible-circle-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  pointer-events: none;
+}
+
+.bible-circle-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #aaa; /* легкий серый */
+  line-height: 1.3;
+}
+
+.bible-circle-percent {
+  font-size: 28px;
+  font-weight: 800;
+  color: #222;
+  margin-top: 6px;
+}
+/* === Карточка прогресса по заветам (ВЗ и НЗ) === */
+.testament-progress-card {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: white;
+  padding: 16px 0;
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 0;
+  border: none;
+}
+
+.testament-progress-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.progress-percent {
+  font-size: 28px;
+  font-weight: 800;
+  color: #222;
+  line-height: 1.2;
+}
+
+.progress-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  margin-top: 4px;
+}
+
+/* === Списки книг === */
+.testament-title {
+  margin: 16px 0 5px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #444;
+  background: white;
+  padding: 12px 0;
+  text-align: left;
+  padding-left: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  margin-bottom: 24px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .book-item {
   background: white;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
-
-.book-info {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  margin-bottom: 8px;
+  min-height: 60px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+  padding: 0;
 }
 
-.book-info h3 {
-  margin: 0;
-  font-size: 17px;
-  font-weight: 600;
-  color: #333;
+.book-item:active {
+  background-color: #f0f0f0;
 }
 
-.book-info span {
-  color: #666;
+.book-short-title {
   font-size: 14px;
+  font-weight: 700;
+  color: #222;
+  margin: 0 0 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  line-height: 1.3;
+}
+
+.book-full-title {
+  font-size: 10px;
+  font-weight: 500;
+  color: #777;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.2;
 }
 
 .book-progress-bar {
-  height: 6px;
+  height: 5px;
   background: #e0e0e0;
-  border-radius: 3px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .book-progress-fill {
   height: 100%;
   background: #667eea;
-  transition: width 0.3s;
+  transition: width 0.3s ease;
+}
+
+/* === Кнопки навигации внизу === */
+.testament-nav-buttons {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: white;
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.nav-button {
+  flex: 1;
+  margin: 0 4px;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #667eea;
+  background: #f0f4ff;
+  border: 1px solid #ccd4f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.nav-button:hover {
+  background: #e0e8ff;
+}
+
+.nav-button:active {
+  background: #d0daff;
 }
