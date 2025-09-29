@@ -23,7 +23,7 @@ const baseTriggerStyle: React.CSSProperties = {
   outline: 'none',
   whiteSpace: 'nowrap',
   overflow: 'hidden',
-  textOverflow: 'ellipsis',
+  textOverflow: 'ellipsis'
 };
 
 const dropdownMenuStyle: React.CSSProperties = {
@@ -51,6 +51,7 @@ const dropdownItemStyle = (isActive: boolean): React.CSSProperties => ({
   borderBottom: '1px solid #3a506b',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
+    textAlign: 'left'
 });
 
 export default function BibleTopBar({
@@ -104,13 +105,13 @@ export default function BibleTopBar({
     >
       <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
         {/* Выбор книги */}
-        <div ref={bookRef} style={{ position: 'relative', minWidth: '160px' }}>
+        <div ref={bookRef} style={{ position: 'relative', minWidth: '200px' }}>
           <div
             onClick={() => setIsBookOpen(!isBookOpen)}
             style={{
               ...baseTriggerStyle,
-              padding: '8px 12px',
-              minWidth: '160px',
+              padding: '12px 12px',
+              minWidth: '200px',
               justifyContent: 'space-between',
             }}
           >
@@ -137,13 +138,13 @@ export default function BibleTopBar({
         </div>
 
         {/* Выбор главы */}
-        <div ref={chapterRef} style={{ position: 'relative', minWidth: '56px' }}>
+        <div ref={chapterRef} style={{ position: 'relative', minWidth: '80px' }}>
           <div
             onClick={() => setIsChapterOpen(!isChapterOpen)}
             style={{
               ...baseTriggerStyle,
-              padding: '8px 10px',
-              minWidth: '56px',
+              padding: '12px 8px',
+              minWidth: '80px',
               justifyContent: 'center',
             }}
           >
