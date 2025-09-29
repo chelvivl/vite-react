@@ -143,9 +143,9 @@ export default function BibleTopBar({
             onClick={() => setIsChapterOpen(!isChapterOpen)}
             style={{
               ...baseTriggerStyle,
-              padding: '12px 8px',
+              padding: '12px 12px',
               minWidth: '80px',
-              justifyContent: 'center',
+              justifyContent: 'space-between',
             }}
           >
             {selectedChapter}
