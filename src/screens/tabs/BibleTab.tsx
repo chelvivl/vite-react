@@ -80,6 +80,14 @@ const handleTouchEnd = () => {
     loadChapter();
   }, [selectedBookKey, selectedChapter]);
 
+  useEffect(() => {
+  loadChapter();
+  // Прокрутка в начало — только после того, как стихи обновились
+  if (textContainerRef.current) {
+    textContainerRef.current.scrollTop = 0;
+  }
+}, [selectedBookKey, selectedChapter]);
+
   return (
     <div style={{overflow: 'hidden'}}>
       <BibleTopBar
