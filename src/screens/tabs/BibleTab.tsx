@@ -47,7 +47,7 @@ const handleTouchMove = (e: React.TouchEvent) => {
     let newFontSize = initialFontSizeRef.current * scale;
 
     // Ограничиваем разумными пределами (например, 12px – 28px)
-    newFontSize = Math.min(Math.max(newFontSize, 6), 50);
+    newFontSize = Math.min(Math.max(newFontSize, 6), 32);
 
     setFontSize(newFontSize);
   }
@@ -128,9 +128,7 @@ const handleTouchEnd = () => {
                   marginRight: "6px",
                   verticalAlign: "baseline",
                 }}
-              >
-                {v.VerseId}
-              </sup>
+              >{v.VerseId}</sup>
               {v.Text}
             </span>
           ))}
