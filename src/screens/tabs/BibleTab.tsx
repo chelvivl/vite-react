@@ -47,7 +47,7 @@ const handleTouchMove = (e: React.TouchEvent) => {
     let newFontSize = initialFontSizeRef.current * scale;
 
     // Ограничиваем разумными пределами (например, 12px – 28px)
-    newFontSize = Math.min(Math.max(newFontSize, 12), 28);
+    newFontSize = Math.min(Math.max(newFontSize, 6), 50);
 
     setFontSize(newFontSize);
   }
