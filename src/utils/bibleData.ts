@@ -1,6 +1,14 @@
 // bibleData.ts
 
-export const OldTestament = {
+export interface BibleBook {
+  title: string;
+  chapters: number;
+  bookId: number;
+  testament: 'old' | 'new';
+  shortTitle: string;
+}
+
+export const OldTestament: Record<string, BibleBook> = {
   Genesis: { title: 'Бытие', chapters: 50, bookId: 1, testament: 'old', shortTitle: 'Быт' },
   Exodus: { title: 'Исход', chapters: 40, bookId: 2, testament: 'old', shortTitle: 'Исх' },
   Leviticus: { title: 'Левит', chapters: 27, bookId: 3, testament: 'old', shortTitle: 'Лев' },
@@ -42,7 +50,7 @@ export const OldTestament = {
   Malachi: { title: 'Малахия', chapters: 4, bookId: 39, testament: 'old', shortTitle: 'Мал' },
 };
 
-export const NewTestament = {
+export const NewTestament: Record<string, BibleBook> = {
   Matthew: { title: 'Матфея', chapters: 28, bookId: 40, testament: 'new', shortTitle: 'Мф' },
   Mark: { title: 'Марка', chapters: 16, bookId: 41, testament: 'new', shortTitle: 'Мк' },
   Luke: { title: 'Луки', chapters: 24, bookId: 42, testament: 'new', shortTitle: 'Лк' },
@@ -72,4 +80,4 @@ export const NewTestament = {
   Revelation: { title: 'Откровение', chapters: 22, bookId: 66, testament: 'new', shortTitle: 'Откр' },
 };
 
-export const ALL_BOOKS = { ...OldTestament, ...NewTestament };
+export const ALL_BOOKS: Record<string, BibleBook> = { ...OldTestament, ...NewTestament };

@@ -4,7 +4,7 @@ import { ALL_BOOKS } from '../utils/bibleData'; // Убедись, что пут
 import { useClickOutside } from '../hooks/useClickOutside';
 
 interface BibleTopBarProps {
-  selectedBookKey: keyof typeof ALL_BOOKS;
+  selectedBookKey: string;
   selectedChapter: number;
   onBookChange: (bookKey: keyof typeof ALL_BOOKS) => void;
   onChapterChange: (chapter: number) => void;
