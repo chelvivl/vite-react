@@ -7,7 +7,7 @@ export default function MainLayout() {
   const location = useLocation();
 
   const tabs = [
-    { path: '/', icon: <FaBook size={24} />, label: 'Библия' },
+    { path: '/', icon: <FaBook size={24} />, label: 'Чтение' },
     { path: '/plan', icon: <FaCalendarAlt size={24} />, label: 'План' },
     { path: '/tracker', icon: <FaChartPie size={24} />, label: 'Трекеры' },
   ];

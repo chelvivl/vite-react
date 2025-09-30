@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainScreen from './screens/MainScreen';
 import DetailScreen from './screens/DetailScreen';
 import ChapterScreen from './screens/ChapterScreen';
+import BibleScreen from './screens/BibleScreen';
 
 import MainLayout from './layout/MainLayout';
 
@@ -146,6 +147,7 @@ function App() {
         </Route>
          <Route path="/detail" element={<DetailScreen plan={plan} onToggleChapter={toggleChapter}/>} />
          <Route path="/chapter" element={<ChapterScreen />} />
+         <Route path="/bible" element={<BibleScreen/>} />
          <Route path="tracker/:id" element={<TrackerDetail />} /> {/* ← новый маршрут */}
           <Route path="tracker/:trackerId/book/:bookKey" element={<BookChapters />} />
          </Routes>

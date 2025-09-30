@@ -1,0 +1,61 @@
+/* BibleTabAlt.css */
+.bible-alt__container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+  color: #1c1c1e;
+}
+
+.bible-alt__list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 56px 15px 0px 15px;
+  overflow-y: auto;
+}
+
+.bible-alt__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 18px 20px;
+  background: transparent;
+  border: 1px solid #e0e0e0;
+  border-radius: 14px;
+  font-size: 17px;
+  font-weight: 500;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  outline: none;
+}
+
+.bible-alt__item:hover {
+  border-color: #007aff;
+  background-color: rgba(0, 122, 255, 0.03);
+}
+
+.bible-alt__item:active {
+  background-color: rgba(0, 122, 255, 0.08);
+  transform: scale(0.99);
+}
+
+.bible-alt__label {
+  text-align: left;
+}
+
+.bible-alt__chevron {
+  font-size: 24px;
+  font-weight: bold;
+  color: #8e8e93;
+  transition: transform 0.2s ease;
+}
+
+.bible-alt__item:hover .bible-alt__chevron {
+  color: #007aff;
+  transform: translateX(4px);
+}
