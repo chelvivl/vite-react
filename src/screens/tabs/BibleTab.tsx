@@ -193,7 +193,7 @@ export default function BibleTab() {
   );
 
   return (
-    <div style={{ overflow: 'hidden', height: '100vh', position: 'relative' }}>
+    <div style={{ overflow: 'hidden', height: '100vh', position: 'relative', bottom: '16px' }}>
       <BibleTopBar
         selectedBookKey={selectedBookKey}
         selectedChapter={selectedChapter}
