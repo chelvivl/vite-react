@@ -22,6 +22,7 @@ export default function MainLayout() {
           <Link
             key={tab.path}
             to={tab.path}
+            replace
             className={location.pathname === tab.path ? 'active' : ''}
           >
             <div className="tab-icon">{tab.icon}</div>
