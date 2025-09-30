@@ -1,146 +1,272 @@
-import BibleTopBar from '../../components/BibleTopBar'; // ← подключи TopBar
-import { useState, useRef } from 'react';
+import BibleTopBar from '../../components/BibleTopBar';
+import { useState, useRef, useEffect } from 'react'; // ✅ useCallback удалён
 import bibleData from '../../data/rst.json';
 import { ALL_BOOKS } from '../../utils/bibleData';
-import { useEffect } from 'react';
 import { BibleData, Verse } from '../../types/bible';
 
 const typedBibleData = bibleData as BibleData;
 
 export default function BibleTab() {
-
   const [selectedBookKey, setSelectedBookKey] = useState('Genesis');
   const [selectedChapter, setSelectedChapter] = useState(1);
-  const [verses, setVerses] = useState<Verse[]>([]); // ← явно указываем тип!
-    const [fontSize, setFontSize] = useState(() => {
-      const saved = localStorage.getItem('bibleFontSize');
-      return saved ? parseInt(saved, 10) : 16;
-    });
+  const [verses, setVerses] = useState<Verse[]>([]);
+  const [fontSize, setFontSize] = useState(() => {
+    const saved = localStorage.getItem('bibleFontSize');
+    return saved ? parseInt(saved, 10) : 16;
+  });
 
-const textContainerRef = useRef<HTMLDivElement>(null);
-const [initialDistance, setInitialDistance] = useState(0);
-const [isPinching, setIsPinching] = useState(false);
-const initialFontSizeRef = useRef(fontSize); // чтобы не "прыгал" при новом жесте
+  // Анимация перехода
+  const [transitionDirection, setTransitionDirection] = useState<'left' | 'right' | null>(null);
+  const [nextVerses, setNextVerses] = useState<Verse[]>([]);
+  const [isAnimating, setIsAnimating] = useState(false);
 
-const getDistance = (touch1: React.Touch, touch2: React.Touch) => {
-  const dx = touch2.clientX - touch1.clientX;
-  const dy = touch2.clientY - touch1.clientY;
-  return Math.sqrt(dx * dx + dy * dy);
-};
+  // Для пинча
+  const textContainerRef = useRef<HTMLDivElement>(null);
+  const [initialDistance, setInitialDistance] = useState(0);
+  const [isPinching, setIsPinching] = useState(false);
+  const initialFontSizeRef = useRef(fontSize);
 
-const handleTouchStart = (e: React.TouchEvent) => {
-  if (e.touches.length === 2) {
-    setIsPinching(true);
-    setInitialDistance(getDistance(e.touches[0], e.touches[1]));
-    initialFontSizeRef.current = fontSize; // фиксируем начальный размер
-  }
-};
+  // Для свайпов
+  const [startX, setStartX] = useState(0);
+  const [isSwiping, setIsSwiping] = useState(false);
+  const SWIPE_THRESHOLD = 50;
 
-const handleTouchMove = (e: React.TouchEvent) => {
-  if (e.touches.length === 2 && isPinching) {
-    e.preventDefault(); // блокируем нативный зум
+  const bookKeys = Object.keys(ALL_BOOKS);
+  const currentBookInfo = ALL_BOOKS[selectedBookKey];
+  const currentBookIndex = bookKeys.indexOf(selectedBookKey);
+  const currentBookData = typedBibleData.Books.find(b => b.BookId === currentBookInfo.bookId);
+  const totalChapters = currentBookData?.Chapters.length || 1;
 
-    const currentDistance = getDistance(e.touches[0], e.touches[1]);
-    const scale = currentDistance / initialDistance;
+  const getDistance = (touch1: Touch, touch2: Touch) => {
+    const dx = touch2.clientX - touch1.clientX;
+    const dy = touch2.clientY - touch1.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  };
 
-    // Новый размер = начальный * масштаб
-    let newFontSize = initialFontSizeRef.current * scale;
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 2) {
+      setIsPinching(true);
+      setInitialDistance(getDistance(e.touches[0] as Touch, e.touches[1] as Touch));
+      initialFontSizeRef.current = fontSize;
+    }
+  };
 
-    // Ограничиваем разумными пределами (например, 12px – 28px)
-    newFontSize = Math.min(Math.max(newFontSize, 6), 32);
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (e.touches.length === 2 && isPinching) {
+      e.preventDefault();
+      const currentDistance = getDistance(e.touches[0] as Touch, e.touches[1] as Touch);
+      const scale = currentDistance / initialDistance;
+      let newFontSize = initialFontSizeRef.current * scale;
+      newFontSize = Math.min(Math.max(newFontSize, 6), 32);
+      setFontSize(newFontSize);
+    }
+  };
 
-    setFontSize(newFontSize);
-  }
-};
+  const handleTouchEnd = () => {
+    setIsPinching(false);
+    setInitialDistance(0);
+  };
 
-const handleTouchEnd = () => {
-  setIsPinching(false);
-  setInitialDistance(0);
-};
+  const handleTouchStartSwipe = (e: React.TouchEvent) => {
+    if (e.touches.length === 1 && !isPinching && !isAnimating) {
+      setIsSwiping(true);
+      setStartX(e.touches[0].clientX);
+    }
+  };
 
-    useEffect(() => {
-      localStorage.setItem('bibleFontSize', fontSize.toString());
-    }, [fontSize]);
+  // ✅ handleTouchMoveSwipe УДАЛЁН — он не нужен!
 
-      const loadChapter = () => {
-        const currentBook = ALL_BOOKS[selectedBookKey];
-        const book = typedBibleData.Books.find(b => b.BookId === currentBook.bookId);
-        if (!book) {
-          return;
-        }
-        const chapter = book.Chapters.find(ch => ch.ChapterId === selectedChapter)
-        if(!chapter){
-            return;
-        }
-        setVerses(chapter.Verses)
+  const handleTouchEndSwipe = (e: React.TouchEvent) => {
+    if (!isSwiping || isAnimating || e.changedTouches.length === 0) {
+      setIsSwiping(false);
+      return;
+    }
 
+    const endX = e.changedTouches[0].clientX;
+    const diff = startX - endX;
+
+    let newBookKey = selectedBookKey;
+    let newChapter = selectedChapter;
+    let direction: 'left' | 'right' | null = null;
+
+    if (diff > SWIPE_THRESHOLD) {
+      if (selectedChapter < totalChapters) {
+        newChapter = selectedChapter + 1;
+        direction = 'left';
+      } else if (currentBookIndex < bookKeys.length - 1) {
+        newBookKey = bookKeys[currentBookIndex + 1];
+        newChapter = 1;
+        direction = 'left';
+      }
+    } else if (diff < -SWIPE_THRESHOLD) {
+      if (selectedChapter > 1) {
+        newChapter = selectedChapter - 1;
+        direction = 'right';
+      } else if (currentBookIndex > 0) {
+        newBookKey = bookKeys[currentBookIndex - 1];
+        const prevBook = typedBibleData.Books.find(b => b.BookId === ALL_BOOKS[newBookKey].bookId);
+        newChapter = prevBook?.Chapters.length || 1;
+        direction = 'right';
+      }
+    }
+
+    if (direction) {
+      const loadVerses = (bookKey: string, chapter: number): Verse[] | null => {
+        const bookInfo = ALL_BOOKS[bookKey];
+        const book = typedBibleData.Books.find(b => b.BookId === bookInfo.bookId);
+        if (!book) return null;
+        const chapterData = book.Chapters.find(ch => ch.ChapterId === chapter);
+        return chapterData ? chapterData.Verses : null;
+      };
+
+      const nextVersesData = loadVerses(newBookKey, newChapter);
+      if (nextVersesData) {
+        setTransitionDirection(direction);
+        setNextVerses(nextVersesData);
+        setIsAnimating(true);
+
+        setTimeout(() => {
+          setSelectedBookKey(newBookKey);
+          setSelectedChapter(newChapter);
+          setVerses(nextVersesData);
+          setIsAnimating(false);
+          setTransitionDirection(null);
+        }, 300);
+      }
+    }
+
+    setIsSwiping(false);
   };
 
   useEffect(() => {
-    loadChapter();
+    const loadVerses = (bookKey: string, chapter: number): Verse[] | null => {
+      const bookInfo = ALL_BOOKS[bookKey];
+      const book = typedBibleData.Books.find(b => b.BookId === bookInfo.bookId);
+      if (!book) return null;
+      const chapterData = book.Chapters.find(ch => ch.ChapterId === chapter);
+      return chapterData ? chapterData.Verses : null;
+    };
+
+    const currentVerses = loadVerses(selectedBookKey, selectedChapter);
+    if (currentVerses) {
+      setVerses(currentVerses);
+    }
   }, [selectedBookKey, selectedChapter]);
 
   useEffect(() => {
-  loadChapter();
-  // Прокрутка в начало — только после того, как стихи обновились
-  if (textContainerRef.current) {
-    textContainerRef.current.scrollTop = 0;
-  }
-}, [selectedBookKey, selectedChapter]);
+    if (textContainerRef.current && !isAnimating) {
+      textContainerRef.current.scrollTop = 0;
+    }
+  }, [selectedBookKey, selectedChapter, isAnimating]);
+
+  useEffect(() => {
+    localStorage.setItem('bibleFontSize', fontSize.toString());
+  }, [fontSize]);
+
+  const renderVerses = (versesList: Verse[]) => (
+    <>
+      {versesList.map((v) => (
+        <span
+          key={v.VerseId}
+          style={{
+            display: 'block',
+            marginBottom: '8px',
+            textIndent: '1em',
+          }}
+        >
+          <sup
+            style={{
+              fontWeight: 'bold',
+              fontSize: '1.1em',
+              color: '#2c3e50',
+              marginRight: '6px',
+              verticalAlign: 'baseline',
+            }}
+          >
+            {v.VerseId}
+          </sup>
+          {v.Text}
+        </span>
+      ))}
+    </>
+  );
 
   return (
-    <div style={{overflow: 'hidden'}}>
+    <div style={{ overflow: 'hidden', height: '100vh', position: 'relative' }}>
       <BibleTopBar
-                selectedBookKey={selectedBookKey}
-                selectedChapter={selectedChapter}
-                onBookChange={setSelectedBookKey}
-                onChapterChange={setSelectedChapter}
-              />
-          <div
-      style={{
-        position: "absolute",
-        top: "56px",
-        left: 0,
-        right: 0,
-        bottom: "90px",
-        overflowY: "auto",
-        paddingTop: "16px",
-        paddingRight: "16px",
-        paddingLeft: "16px",
-        textAlign: "justify", // ← выравнивание по ширине
-        fontSize: `${fontSize}px`, // ← вот он!
-        textJustify: "inter-word",
-        backgroundColor: "#F6F6F6",
-      }}
-      ref={textContainerRef}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-    >
-      {
-      verses.map((v) => (
-            <span
-              key={v.VerseId}
-              style={{
-                display: "block",
-                marginBottom: "8px",
-                color: "black",
-                textIndent: "1em", // отступ первой строки (по классике)
-              }}
-            >
-              <sup
-                style={{
-                  fontWeight: "bold",
-                  fontSize: "1.1em",
-                  color: "#2c3e50",
-                  marginRight: "6px",
-                  verticalAlign: "baseline",
-                }}
-              >{v.VerseId}</sup>
-              {v.Text}
-            </span>
-          ))}
+        selectedBookKey={selectedBookKey}
+        selectedChapter={selectedChapter}
+        onBookChange={setSelectedBookKey}
+        onChapterChange={setSelectedChapter}
+      />
+
+      <div
+        style={{
+          position: 'absolute',
+          top: '56px',
+          left: 0,
+          right: 0,
+          bottom: '90px',
+          overflowY: 'auto',
+          paddingTop: '16px',
+          paddingRight: '16px',
+          paddingLeft: '16px',
+          textAlign: 'justify',
+          fontSize: `${fontSize}px`,
+          textJustify: 'inter-word',
+          backgroundColor: '#F6F6F6',
+          color: 'black',
+          touchAction: 'pan-y',
+          zIndex: isAnimating ? 2 : 1,
+          transition: isAnimating ? 'transform 0.3s ease-out' : 'none',
+          transform: isAnimating
+            ? transitionDirection === 'left'
+              ? 'translateX(-100%)'
+              : 'translateX(100%)'
+            : 'translateX(0)',
+        }}
+        ref={textContainerRef}
+        onTouchStart={(e) => {
+          handleTouchStart(e);
+          handleTouchStartSwipe(e);
+        }}
+        onTouchMove={(e) => {
+          handleTouchMove(e);
+          // ✅ handleTouchMoveSwipe удалён — не вызываем
+        }}
+        onTouchEnd={(e) => {
+          handleTouchEnd();
+          handleTouchEndSwipe(e);
+        }}
+      >
+        {renderVerses(verses)}
+      </div>
+
+      {isAnimating && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '56px',
+            left: 0,
+            right: 0,
+            bottom: '90px',
+            overflowY: 'auto',
+            paddingTop: '16px',
+            paddingRight: '16px',
+            paddingLeft: '16px',
+            textAlign: 'justify',
+            fontSize: `${fontSize}px`,
+            textJustify: 'inter-word',
+            backgroundColor: '#F6F6F6',
+            color: 'black',
+            zIndex: 1,
+            transition: 'transform 0.3s ease-out',
+            transform: 'translateX(0)',
+          }}
+        >
+          {renderVerses(nextVerses)}
+        </div>
+      )}
     </div>
-  </div>
   );
 }
