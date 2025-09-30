@@ -116,7 +116,8 @@ const handleTouchEnd = () => {
           paddingTop: '16px',
           paddingRight: '16px',
           paddingLeft: '16px',
-                    textAlign: 'justify', // ← выравнивание по ширине
+          textAlign: 'justify', // ← выравнивание по ширине
+          fontSize: `${fontSize}px`, // ← вот он!
           textJustify: 'inter-word',
              backgroundColor: '#F6F6F6'
         }}

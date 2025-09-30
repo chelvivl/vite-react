@@ -1,7 +1,7 @@
 {
-  "name": "Библия 111 дней",
-  "short_name": "Библия 111 дней",
-  "description": "План чтения Библии на 111 дней",
+  "name": "Библия",
+  "short_name": "Библия",
+  "description": "Библия",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
