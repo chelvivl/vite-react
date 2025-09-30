@@ -1,5 +1,5 @@
 import BibleTopBar from '../../components/BibleTopBar'; // ← подключи TopBar
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import bibleData from '../../data/rst.json';
 import { ALL_BOOKS } from '../../utils/bibleData';
 import { useEffect } from 'react';
@@ -12,6 +12,55 @@ export default function BibleTab() {
   const [selectedBookKey, setSelectedBookKey] = useState('Genesis');
   const [selectedChapter, setSelectedChapter] = useState(1);
   const [verses, setVerses] = useState<Verse[]>([]); // ← явно указываем тип!
+    const [fontSize, setFontSize] = useState(() => {
+      const saved = localStorage.getItem('bibleFontSize');
+      return saved ? parseInt(saved, 10) : 16;
+    });
+
+const textContainerRef = useRef<HTMLDivElement>(null);
+const [initialDistance, setInitialDistance] = useState(0);
+const [isPinching, setIsPinching] = useState(false);
+const initialFontSizeRef = useRef(fontSize); // чтобы не "прыгал" при новом жесте
+
+const getDistance = (touch1: React.Touch, touch2: React.Touch) => {
+  const dx = touch2.clientX - touch1.clientX;
+  const dy = touch2.clientY - touch1.clientY;
+  return Math.sqrt(dx * dx + dy * dy);
+};
+
+const handleTouchStart = (e: React.TouchEvent) => {
+  if (e.touches.length === 2) {
+    setIsPinching(true);
+    setInitialDistance(getDistance(e.touches[0], e.touches[1]));
+    initialFontSizeRef.current = fontSize; // фиксируем начальный размер
+  }
+};
+
+const handleTouchMove = (e: React.TouchEvent) => {
+  if (e.touches.length === 2 && isPinching) {
+    e.preventDefault(); // блокируем нативный зум
+
+    const currentDistance = getDistance(e.touches[0], e.touches[1]);
+    const scale = currentDistance / initialDistance;
+
+    // Новый размер = начальный * масштаб
+    let newFontSize = initialFontSizeRef.current * scale;
+
+    // Ограничиваем разумными пределами (например, 12px – 28px)
+    newFontSize = Math.min(Math.max(newFontSize, 12), 28);
+
+    setFontSize(newFontSize);
+  }
+};
+
+const handleTouchEnd = () => {
+  setIsPinching(false);
+  setInitialDistance(0);
+};
+
+    useEffect(() => {
+      localStorage.setItem('bibleFontSize', fontSize.toString());
+    }, [fontSize]);
 
       const loadChapter = () => {
         const currentBook = ALL_BOOKS[selectedBookKey];
@@ -51,9 +100,14 @@ export default function BibleTab() {
         paddingRight: "16px",
         paddingLeft: "16px",
         textAlign: "justify", // ← выравнивание по ширине
+        fontSize: `${fontSize}px`, // ← вот он!
         textJustify: "inter-word",
         backgroundColor: "#F6F6F6",
       }}
+      ref={textContainerRef}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
     >
       {
       verses.map((v) => (
