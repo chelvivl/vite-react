@@ -1,5 +1,5 @@
 import BibleTopBar from '../../components/BibleTopBar';
-import { useState, useRef, useEffect } from 'react'; // ✅ useCallback удалён
+import { useState, useRef, useEffect } from 'react';
 import bibleData from '../../data/rst.json';
 import { ALL_BOOKS } from '../../utils/bibleData';
 import { BibleData, Verse } from '../../types/bible';
@@ -30,6 +30,9 @@ export default function BibleTab() {
   const [startX, setStartX] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
   const SWIPE_THRESHOLD = 50;
+
+  // Настройки анимации — УДВОЕНАЯ ДЛИТЕЛЬНОСТЬ
+  const ANIMATION_DURATION = 500
 
   const bookKeys = Object.keys(ALL_BOOKS);
   const currentBookInfo = ALL_BOOKS[selectedBookKey];
@@ -73,8 +76,6 @@ export default function BibleTab() {
       setStartX(e.touches[0].clientX);
     }
   };
-
-  // ✅ handleTouchMoveSwipe УДАЛЁН — он не нужен!
 
   const handleTouchEndSwipe = (e: React.TouchEvent) => {
     if (!isSwiping || isAnimating || e.changedTouches.length === 0) {
@@ -131,7 +132,7 @@ export default function BibleTab() {
           setVerses(nextVersesData);
           setIsAnimating(false);
           setTransitionDirection(null);
-        }, 300);
+        }, ANIMATION_DURATION);
       }
     }
 
@@ -200,6 +201,7 @@ export default function BibleTab() {
         onChapterChange={setSelectedChapter}
       />
 
+      {/* Текущая страница */}
       <div
         style={{
           position: 'absolute',
@@ -218,7 +220,9 @@ export default function BibleTab() {
           color: 'black',
           touchAction: 'pan-y',
           zIndex: isAnimating ? 2 : 1,
-          transition: isAnimating ? 'transform 0.3s ease-out' : 'none',
+          transition: isAnimating
+            ? `transform ${ANIMATION_DURATION}ms cubic-bezier(0.22, 1, 0.36, 1)`
+            : 'none',
           transform: isAnimating
             ? transitionDirection === 'left'
               ? 'translateX(-100%)'
@@ -230,10 +234,7 @@ export default function BibleTab() {
           handleTouchStart(e);
           handleTouchStartSwipe(e);
         }}
-        onTouchMove={(e) => {
-          handleTouchMove(e);
-          // ✅ handleTouchMoveSwipe удалён — не вызываем
-        }}
+        onTouchMove={handleTouchMove}
         onTouchEnd={(e) => {
           handleTouchEnd();
           handleTouchEndSwipe(e);
@@ -242,6 +243,7 @@ export default function BibleTab() {
         {renderVerses(verses)}
       </div>
 
+      {/* Следующая страница (для анимации) */}
       {isAnimating && (
         <div
           style={{
@@ -260,7 +262,7 @@ export default function BibleTab() {
             backgroundColor: '#F6F6F6',
             color: 'black',
             zIndex: 1,
-            transition: 'transform 0.3s ease-out',
+            transition: `transform ${ANIMATION_DURATION}ms cubic-bezier(0.22, 1, 0.36, 1)`,
             transform: 'translateX(0)',
           }}
         >
