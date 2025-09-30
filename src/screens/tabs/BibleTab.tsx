@@ -29,7 +29,7 @@ export default function BibleTab() {
   // Для свайпов
   const [startX, setStartX] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
-  const SWIPE_THRESHOLD = 50;
+  const SWIPE_THRESHOLD = 100;
 
   // Настройки анимации — УДВОЕНАЯ ДЛИТЕЛЬНОСТЬ
   const ANIMATION_DURATION = 500
@@ -208,7 +208,7 @@ export default function BibleTab() {
           top: '56px',
           left: 0,
           right: 0,
-          bottom: '90px',
+          bottom: '120px',
           overflowY: 'auto',
           paddingTop: '16px',
           paddingRight: '16px',
@@ -251,7 +251,7 @@ export default function BibleTab() {
             top: '56px',
             left: 0,
             right: 0,
-            bottom: '90px',
+            bottom: '120px',
             overflowY: 'auto',
             paddingTop: '16px',
             paddingRight: '16px',
