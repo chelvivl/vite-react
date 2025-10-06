@@ -134,13 +134,8 @@ export default function BibleTopBar({
     }
   }, [playbackRate]);
 
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
-    // Не сбрасываем currentAudioKey — он остаётся, чтобы кнопка знала, что аудио "активно", но не для текущей главы
-  }, [selectedBookKey, selectedChapter]);
+  // 🔴 НЕ останавливаем аудио при смене главы
+  // (оставляем его играть)
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -156,35 +151,52 @@ export default function BibleTopBar({
 
   const currentBook = ALL_BOOKS[selectedBookKey];
   const chapterOptions = Array.from({ length: currentBook.chapters }, (_, i) => i + 1);
-
   const speedOptions = [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0];
 
-  const getAudioUrl = () => {
-    return `${GITHUB_PAGES_BASE_URL}/bible1.${selectedChapter}.mp3`;
+  const getAudioUrl = (chapter: number) => {
+    return `${GITHUB_PAGES_BASE_URL}/bible1.${chapter}.mp3`;
   };
 
   const handleLocalPlayPause = async () => {
-    const isCurrentChapterPlaying = currentAudioKey?.bookKey === selectedBookKey && currentAudioKey?.chapter === selectedChapter;
+    const isCurrentChapterPlaying =
+      currentAudioKey?.bookKey === selectedBookKey && currentAudioKey?.chapter === selectedChapter;
 
     if (isLoadingAudio) return;
 
-    // Если сейчас играет текущая глава — ставим на паузу
+    // Если уже играет текущая глава — ставим на паузу, НО НЕ УДАЛЯЕМ audioRef
     if (isCurrentChapterPlaying && audioRef.current) {
       audioRef.current.pause();
-      setCurrentAudioKey(null);
+      setCurrentAudioKey(null); // больше не считаем, что текущая глава играет
       return;
     }
 
-    // Иначе — останавливаем старое (если есть) и запускаем текущую главу
+    // Если уже есть аудио для текущей главы (но оно на паузе) — возобновляем его
+    if (audioRef.current && isCurrentChapterPlaying === false) {
+      // Проверим: может, уже загружено аудио для этой главы?
+      const urlForCurrent = getAudioUrl(selectedChapter);
+      if (audioRef.current.src === urlForCurrent) {
+        // То же аудио — просто play
+        try {
+          await audioRef.current.play();
+          setCurrentAudioKey({ bookKey: selectedBookKey, chapter: selectedChapter });
+        } catch (err) {
+          console.error('Resume failed:', err);
+          setCurrentAudioKey(null);
+        }
+        return;
+      }
+    }
+
+    // Иначе — создаём новое аудио для текущей главы
     if (audioRef.current) {
+      // Останавливаем предыдущее (если оно не то же самое)
       audioRef.current.pause();
-      audioRef.current = null;
     }
 
     setIsLoadingAudio(true);
 
     try {
-      const url = getAudioUrl();
+      const url = getAudioUrl(selectedChapter);
       const response = await fetch(url);
 
       if (response.status !== 200 && response.status !== 304) {
@@ -214,7 +226,8 @@ export default function BibleTopBar({
     setIsSpeedOpen(false);
   };
 
-  const isPlayingCurrent = currentAudioKey?.bookKey === selectedBookKey && currentAudioKey?.chapter === selectedChapter;
+  const isPlayingCurrent =
+    currentAudioKey?.bookKey === selectedBookKey && currentAudioKey?.chapter === selectedChapter;
 
   return (
     <>
@@ -233,7 +246,7 @@ export default function BibleTopBar({
           boxSizing: 'border-box',
         }}
       >
-        {/* Верхняя панель: книга и глава слева, play/pause — справа */}
+        {/* Верхняя панель */}
         <div
           style={{
             height: '56px',
@@ -247,9 +260,8 @@ export default function BibleTopBar({
             boxSizing: 'border-box',
           }}
         >
-          {/* Левая группа: книга и глава */}
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            {/* Выбор книги */}
+            {/* Книга */}
             <div ref={bookRef} style={{ position: 'relative', minWidth: '200px' }}>
               <div
                 onClick={() => setIsBookOpen(!isBookOpen)}
@@ -263,7 +275,6 @@ export default function BibleTopBar({
                 {currentBook.title}
                 <span style={{ fontSize: '12px', marginLeft: '6px' }}>▼</span>
               </div>
-
               {isBookOpen && (
                 <div style={dropdownMenuStyle}>
                   {Object.entries(ALL_BOOKS).map(([key, book]) => (
@@ -282,7 +293,7 @@ export default function BibleTopBar({
               )}
             </div>
 
-            {/* Выбор главы */}
+            {/* Глава */}
             <div ref={chapterRef} style={{ position: 'relative', minWidth: '80px' }}>
               <div
                 onClick={() => setIsChapterOpen(!isChapterOpen)}
@@ -296,7 +307,6 @@ export default function BibleTopBar({
                 {selectedChapter}
                 <span style={{ fontSize: '10px', marginLeft: '4px' }}>▼</span>
               </div>
-
               {isChapterOpen && (
                 <div style={dropdownMenuStyle}>
                   {chapterOptions.map((ch) => (
@@ -316,7 +326,7 @@ export default function BibleTopBar({
             </div>
           </div>
 
-          {/* Кнопка Play/Pause — прижата к правому краю */}
+          {/* Кнопка Play/Pause */}
           <button
             onClick={handleLocalPlayPause}
             disabled={isLoadingAudio}
@@ -347,7 +357,7 @@ export default function BibleTopBar({
           </button>
         </div>
 
-        {/* Нижняя панель: анимация слева, скорость справа */}
+        {/* Нижняя панель */}
         <div
           style={{
             height: '40px',
@@ -359,12 +369,12 @@ export default function BibleTopBar({
             boxSizing: 'border-box',
           }}
         >
-          {/* Анимация воспроизведения — только если играет текущая глава */}
+          {/* Волна — показывается всегда, если что-то играет */}
           <div style={{ height: '100%', display: 'flex', alignItems: 'center' }}>
-            {isPlayingCurrent && <AudioWave />}
+            {currentAudioKey !== null && <AudioWave />}
           </div>
 
-          {/* Скорость справа */}
+          {/* Скорость */}
           <div ref={speedRef} style={{ position: 'relative', minWidth: '60px' }}>
             <div
               onClick={() => setIsSpeedOpen(!isSpeedOpen)}
@@ -379,7 +389,6 @@ export default function BibleTopBar({
             >
               {playbackRate}x
             </div>
-
             {isSpeedOpen && (
               <div style={{ ...dropdownMenuStyle, width: '80px' }}>
                 {speedOptions.map((rate) => (
