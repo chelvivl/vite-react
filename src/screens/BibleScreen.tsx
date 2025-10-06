@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import bibleData from '../data/rst.json';
 import { ALL_BOOKS } from '../utils/bibleData';
 import { BibleData, Verse } from '../types/bible';
+import { useAudioPlayer } from '../hooks/useAudioPlayer';
 
 const typedBibleData = bibleData as BibleData;
 
@@ -14,6 +15,23 @@ export default function BibleScreen() {
     const saved = localStorage.getItem('bibleFontSize');
     return saved ? parseInt(saved, 10) : 16;
   });
+
+  const {
+    isPlaying,
+    isLoading,
+
+    playChapter,
+    togglePlayPause
+  } = useAudioPlayer();
+
+    // Запуск воспроизведения текущей главы
+  const handlePlayPause = () => {
+    if (!isPlaying && !isLoading) {
+      playChapter(selectedChapter);
+    } else {
+      togglePlayPause();
+    }
+  };
 
   // Анимация перехода
   const [transitionDirection, setTransitionDirection] = useState<'left' | 'right' | null>(null);
@@ -199,13 +217,17 @@ export default function BibleScreen() {
         selectedChapter={selectedChapter}
         onBookChange={setSelectedBookKey}
         onChapterChange={setSelectedChapter}
+        isPlaying={isPlaying}
+        onPlayPause={handlePlayPause}
+        onPrevChapter={ () => {}}
+        onNextChapter={ () => {}}
       />
 
       {/* Текущая страница */}
       <div
         style={{
           position: 'absolute',
-          top: '72px',
+          top: '120px',
           left: 0,
           right: 0,
           bottom: 0,
