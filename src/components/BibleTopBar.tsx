@@ -114,10 +114,10 @@ export default function BibleTopBar({
 }: BibleTopBarProps) {
   const [isBookOpen, setIsBookOpen] = useState(false);
   const [isChapterOpen, setIsChapterOpen] = useState(false);
-  const [isLocalPlaying, setIsLocalPlaying] = useState(false);
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
   const [isSpeedOpen, setIsSpeedOpen] = useState(false);
   const [playbackRate, setPlaybackRate] = useState(1.0);
+  const [currentAudioKey, setCurrentAudioKey] = useState<{ bookKey: string; chapter: number } | null>(null);
 
   const bookRef = useRef<HTMLDivElement>(null);
   const chapterRef = useRef<HTMLDivElement>(null);
@@ -138,8 +138,8 @@ export default function BibleTopBar({
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current = null;
-      setIsLocalPlaying(false);
     }
+    // Не сбрасываем currentAudioKey — он остаётся, чтобы кнопка знала, что аудио "активно", но не для текущей главы
   }, [selectedBookKey, selectedChapter]);
 
   useEffect(() => {
@@ -164,23 +164,21 @@ export default function BibleTopBar({
   };
 
   const handleLocalPlayPause = async () => {
+    const isCurrentChapterPlaying = currentAudioKey?.bookKey === selectedBookKey && currentAudioKey?.chapter === selectedChapter;
+
     if (isLoadingAudio) return;
 
-    if (isLocalPlaying) {
-      audioRef.current?.pause();
-      setIsLocalPlaying(false);
+    // Если сейчас играет текущая глава — ставим на паузу
+    if (isCurrentChapterPlaying && audioRef.current) {
+      audioRef.current.pause();
+      setCurrentAudioKey(null);
       return;
     }
 
+    // Иначе — останавливаем старое (если есть) и запускаем текущую главу
     if (audioRef.current) {
-      audioRef.current.playbackRate = playbackRate;
-      try {
-        await audioRef.current.play();
-        setIsLocalPlaying(true);
-      } catch (error) {
-        console.error('Playback failed:', error);
-      }
-      return;
+      audioRef.current.pause();
+      audioRef.current = null;
     }
 
     setIsLoadingAudio(true);
@@ -198,14 +196,14 @@ export default function BibleTopBar({
       audioRef.current = audio;
 
       audio.onended = () => {
-        setIsLocalPlaying(false);
+        setCurrentAudioKey(null);
       };
 
       await audio.play();
-      setIsLocalPlaying(true);
+      setCurrentAudioKey({ bookKey: selectedBookKey, chapter: selectedChapter });
     } catch (error) {
       console.error('Failed to load or play audio:', error);
-      setIsLocalPlaying(false);
+      setCurrentAudioKey(null);
     } finally {
       setIsLoadingAudio(false);
     }
@@ -215,6 +213,8 @@ export default function BibleTopBar({
     setPlaybackRate(rate);
     setIsSpeedOpen(false);
   };
+
+  const isPlayingCurrent = currentAudioKey?.bookKey === selectedBookKey && currentAudioKey?.chapter === selectedChapter;
 
   return (
     <>
@@ -239,7 +239,7 @@ export default function BibleTopBar({
             height: '56px',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between', // ← распределяем пространство
+            justifyContent: 'space-between',
             padding: '0 16px',
             fontSize: '17px',
             fontWeight: 600,
@@ -338,12 +338,12 @@ export default function BibleTopBar({
             aria-label={
               isLoadingAudio
                 ? 'Loading...'
-                : isLocalPlaying
+                : isPlayingCurrent
                 ? 'Pause'
                 : 'Play'
             }
           >
-            {isLoadingAudio ? <Spinner /> : isLocalPlaying ? <IoPause /> : <IoPlay />}
+            {isLoadingAudio ? <Spinner /> : isPlayingCurrent ? <IoPause /> : <IoPlay />}
           </button>
         </div>
 
@@ -359,9 +359,9 @@ export default function BibleTopBar({
             boxSizing: 'border-box',
           }}
         >
-          {/* Анимация воспроизведения — только если играет */}
+          {/* Анимация воспроизведения — только если играет текущая глава */}
           <div style={{ height: '100%', display: 'flex', alignItems: 'center' }}>
-            {isLocalPlaying && <AudioWave />}
+            {isPlayingCurrent && <AudioWave />}
           </div>
 
           {/* Скорость справа */}
