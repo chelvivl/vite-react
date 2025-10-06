@@ -5,8 +5,8 @@ import { useClickOutside } from '../hooks/useClickOutside';
 import { IoPlay, IoPause, IoPlaySkipBack, IoPlaySkipForward } from 'react-icons/io5';
 
 // ⚠️ ЗАМЕНИ НА СВОЙ URL!
-
 const GITHUB_PAGES_BASE_URL = 'https://chelvivl.github.io/music-server-1/';
+
 interface BibleTopBarProps {
   selectedBookKey: string;
   selectedChapter: number;
@@ -33,7 +33,7 @@ const baseTriggerStyle: React.CSSProperties = {
 const dropdownMenuStyle: React.CSSProperties = {
   position: 'absolute',
   top: '100%',
-  right: 0, // ← выравнивание по правому краю
+  right: 0,
   width: '100px',
   maxHeight: '160px',
   overflowY: 'auto',
@@ -55,7 +55,7 @@ const dropdownItemStyle = (isActive: boolean): React.CSSProperties => ({
   borderBottom: '1px solid #3a506b',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
-  textAlign: 'center', // ← центрируем текст скорости
+  textAlign: 'center',
 });
 
 // Компактный спиннер
@@ -91,25 +91,32 @@ export default function BibleTopBar({
   const [isChapterOpen, setIsChapterOpen] = useState(false);
   const [isLocalPlaying, setIsLocalPlaying] = useState(false);
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
-  const [isSpeedOpen, setIsSpeedOpen] = useState(false); // ← новое состояние
-  const [playbackRate, setPlaybackRate] = useState(1.0); // ← по умолчанию 1.0x
+  const [isSpeedOpen, setIsSpeedOpen] = useState(false);
+  const [playbackRate, setPlaybackRate] = useState(1.0);
 
   const bookRef = useRef<HTMLDivElement>(null);
   const chapterRef = useRef<HTMLDivElement>(null);
-  const speedRef = useRef<HTMLDivElement>(null); // ← для меню скорости
+  const speedRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useClickOutside(bookRef, () => setIsBookOpen(false));
   useClickOutside(chapterRef, () => setIsChapterOpen(false));
-  useClickOutside(speedRef, () => setIsSpeedOpen(false)); // ← обработка клика вне меню скорости
+  useClickOutside(speedRef, () => setIsSpeedOpen(false));
 
+  // Применяем скорость к текущему аудио при её изменении
   useEffect(() => {
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
+    if (audioRef.current) {
+      audioRef.current.playbackRate = playbackRate;
+    }
+  }, [playbackRate]);
+
+  // Очистка аудио при смене главы/книги
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+      setIsLocalPlaying(false);
+    }
   }, [selectedBookKey, selectedChapter]);
 
   useEffect(() => {
@@ -130,7 +137,7 @@ export default function BibleTopBar({
   const speedOptions = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
 
   const getAudioUrl = () => {
-    return `${GITHUB_PAGES_BASE_URL}bible1.${selectedChapter}.mp3`;
+    return `${GITHUB_PAGES_BASE_URL}/bible1.${selectedChapter}.mp3`;
   };
 
   const handleLocalPlayPause = async () => {
@@ -142,7 +149,9 @@ export default function BibleTopBar({
       return;
     }
 
+    // Если аудио уже создано — просто возобновляем с текущей скоростью
     if (audioRef.current) {
+      audioRef.current.playbackRate = playbackRate;
       try {
         await audioRef.current.play();
         setIsLocalPlaying(true);
@@ -152,6 +161,7 @@ export default function BibleTopBar({
       return;
     }
 
+    // Создаём новое аудио
     setIsLoadingAudio(true);
 
     try {
@@ -163,6 +173,7 @@ export default function BibleTopBar({
       }
 
       const audio = new Audio(url);
+      audio.playbackRate = playbackRate; // ← устанавливаем скорость сразу
       audioRef.current = audio;
 
       audio.onended = () => {
@@ -177,6 +188,11 @@ export default function BibleTopBar({
     } finally {
       setIsLoadingAudio(false);
     }
+  };
+
+  const handleSpeedChange = (rate: number) => {
+    setPlaybackRate(rate);
+    setIsSpeedOpen(false);
   };
 
   return (
@@ -279,13 +295,13 @@ export default function BibleTopBar({
           </div>
         </div>
 
-        {/* Аудио-панель — компактная */}
+        {/* Аудио-панель */}
         <div
           style={{
             height: '40px',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between', // ← распределяем: кнопки слева, скорость справа
+            justifyContent: 'space-between',
             padding: '0 12px',
             backgroundColor: 'rgba(0, 0, 0, 0.15)',
             boxSizing: 'border-box',
@@ -365,7 +381,7 @@ export default function BibleTopBar({
             </button>
           </div>
 
-          {/* Правая группа: скорость воспроизведения */}
+          {/* Правая группа: скорость */}
           <div ref={speedRef} style={{ position: 'relative', minWidth: '60px' }}>
             <div
               onClick={() => setIsSpeedOpen(!isSpeedOpen)}
@@ -386,10 +402,7 @@ export default function BibleTopBar({
                 {speedOptions.map((rate) => (
                   <div
                     key={rate}
-                    onClick={() => {
-                      setPlaybackRate(rate);
-                      setIsSpeedOpen(false);
-                    }}
+                    onClick={() => handleSpeedChange(rate)}
                     style={dropdownItemStyle(rate === playbackRate)}
                   >
                     {rate}x
