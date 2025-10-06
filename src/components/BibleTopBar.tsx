@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ALL_BOOKS } from '../utils/bibleData';
 import { useClickOutside } from '../hooks/useClickOutside';
-import { IoPlay, IoPause, IoPlaySkipBack, IoPlaySkipForward } from 'react-icons/io5';
+import { IoPlay, IoPause } from 'react-icons/io5';
 
 // ⚠️ ЗАМЕНИ НА СВОЙ URL!
 const GITHUB_PAGES_BASE_URL = 'https://chelvivl.github.io/music-server-1/';
@@ -58,6 +58,31 @@ const dropdownItemStyle = (isActive: boolean): React.CSSProperties => ({
   textAlign: 'center',
 });
 
+// Анимированная звуковая волна
+const AudioWave = () => (
+  <div style={{ display: 'flex', gap: '2px', alignItems: 'center', height: '24px' }}>
+    {[0, 1, 2, 3, 4].map((i) => (
+      <div
+        key={i}
+        style={{
+          width: '3px',
+          height: '100%',
+          backgroundColor: 'white',
+          borderRadius: '2px',
+          animation: 'wave 1.2s infinite ease-in-out',
+          animationDelay: `${i * 0.15}s`,
+        }}
+      />
+    ))}
+    <style>{`
+      @keyframes wave {
+        0%, 100% { height: 6px; }
+        50% { height: 20px; }
+      }
+    `}</style>
+  </div>
+);
+
 // Компактный спиннер
 const Spinner = () => (
   <div
@@ -103,14 +128,12 @@ export default function BibleTopBar({
   useClickOutside(chapterRef, () => setIsChapterOpen(false));
   useClickOutside(speedRef, () => setIsSpeedOpen(false));
 
-  // Применяем скорость к текущему аудио при её изменении
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.playbackRate = playbackRate;
     }
   }, [playbackRate]);
 
-  // Очистка аудио при смене главы/книги
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.pause();
@@ -134,7 +157,7 @@ export default function BibleTopBar({
   const currentBook = ALL_BOOKS[selectedBookKey];
   const chapterOptions = Array.from({ length: currentBook.chapters }, (_, i) => i + 1);
 
-  const speedOptions = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
+  const speedOptions = [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0];
 
   const getAudioUrl = () => {
     return `${GITHUB_PAGES_BASE_URL}/bible1.${selectedChapter}.mp3`;
@@ -149,7 +172,6 @@ export default function BibleTopBar({
       return;
     }
 
-    // Если аудио уже создано — просто возобновляем с текущей скоростью
     if (audioRef.current) {
       audioRef.current.playbackRate = playbackRate;
       try {
@@ -161,7 +183,6 @@ export default function BibleTopBar({
       return;
     }
 
-    // Создаём новое аудио
     setIsLoadingAudio(true);
 
     try {
@@ -173,7 +194,7 @@ export default function BibleTopBar({
       }
 
       const audio = new Audio(url);
-      audio.playbackRate = playbackRate; // ← устанавливаем скорость сразу
+      audio.playbackRate = playbackRate;
       audioRef.current = audio;
 
       audio.onended = () => {
@@ -212,13 +233,13 @@ export default function BibleTopBar({
           boxSizing: 'border-box',
         }}
       >
-        {/* Верхняя панель: выбор книги и главы */}
+        {/* Верхняя панель: книга и глава слева, play/pause — справа */}
         <div
           style={{
             height: '56px',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'flex-start',
+            justifyContent: 'space-between', // ← распределяем пространство
             padding: '0 16px',
             fontSize: '17px',
             fontWeight: 600,
@@ -226,6 +247,7 @@ export default function BibleTopBar({
             boxSizing: 'border-box',
           }}
         >
+          {/* Левая группа: книга и глава */}
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             {/* Выбор книги */}
             <div ref={bookRef} style={{ position: 'relative', minWidth: '200px' }}>
@@ -293,9 +315,39 @@ export default function BibleTopBar({
               )}
             </div>
           </div>
+
+          {/* Кнопка Play/Pause — прижата к правому краю */}
+          <button
+            onClick={handleLocalPlayPause}
+            disabled={isLoadingAudio}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'white',
+              fontSize: '20px',
+              cursor: isLoadingAudio ? 'not-allowed' : 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '36px',
+              height: '36px',
+              borderRadius: '50%',
+              outline: 'none',
+              padding: 0,
+            }}
+            aria-label={
+              isLoadingAudio
+                ? 'Loading...'
+                : isLocalPlaying
+                ? 'Pause'
+                : 'Play'
+            }
+          >
+            {isLoadingAudio ? <Spinner /> : isLocalPlaying ? <IoPause /> : <IoPlay />}
+          </button>
         </div>
 
-        {/* Аудио-панель */}
+        {/* Нижняя панель: анимация слева, скорость справа */}
         <div
           style={{
             height: '40px',
@@ -307,81 +359,12 @@ export default function BibleTopBar({
             boxSizing: 'border-box',
           }}
         >
-          {/* Левая группа: управление */}
-          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-            <button
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'white',
-                fontSize: '18px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '32px',
-                height: '32px',
-                borderRadius: '50%',
-                outline: 'none',
-                padding: 0,
-              }}
-              aria-label="Previous chapter"
-            >
-              <IoPlaySkipBack />
-            </button>
-
-            <button
-              onClick={handleLocalPlayPause}
-              disabled={isLoadingAudio}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'white',
-                fontSize: '20px',
-                cursor: isLoadingAudio ? 'not-allowed' : 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '36px',
-                height: '36px',
-                borderRadius: '50%',
-                outline: 'none',
-                padding: 0,
-              }}
-              aria-label={
-                isLoadingAudio
-                  ? 'Loading...'
-                  : isLocalPlaying
-                  ? 'Pause'
-                  : 'Play'
-              }
-            >
-              {isLoadingAudio ? <Spinner /> : isLocalPlaying ? <IoPause /> : <IoPlay />}
-            </button>
-
-            <button
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'white',
-                fontSize: '18px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '32px',
-                height: '32px',
-                borderRadius: '50%',
-                outline: 'none',
-                padding: 0,
-              }}
-              aria-label="Next chapter"
-            >
-              <IoPlaySkipForward />
-            </button>
+          {/* Анимация воспроизведения — только если играет */}
+          <div style={{ height: '100%', display: 'flex', alignItems: 'center' }}>
+            {isLocalPlaying && <AudioWave />}
           </div>
 
-          {/* Правая группа: скорость */}
+          {/* Скорость справа */}
           <div ref={speedRef} style={{ position: 'relative', minWidth: '60px' }}>
             <div
               onClick={() => setIsSpeedOpen(!isSpeedOpen)}
