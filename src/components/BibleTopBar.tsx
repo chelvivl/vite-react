@@ -5,8 +5,8 @@ import { useClickOutside } from '../hooks/useClickOutside';
 import { IoPlay, IoPause, IoPlaySkipBack, IoPlaySkipForward } from 'react-icons/io5';
 
 // ⚠️ ЗАМЕНИ НА СВОЙ URL!
-const GITHUB_PAGES_BASE_URL = 'https://chelvivl.github.io/music-server-1/';
 
+const GITHUB_PAGES_BASE_URL = 'https://chelvivl.github.io/music-server-1/';
 interface BibleTopBarProps {
   selectedBookKey: string;
   selectedChapter: number;
@@ -33,9 +33,9 @@ const baseTriggerStyle: React.CSSProperties = {
 const dropdownMenuStyle: React.CSSProperties = {
   position: 'absolute',
   top: '100%',
-  left: 0,
-  width: '100%',
-  maxHeight: '240px',
+  right: 0, // ← выравнивание по правому краю
+  width: '100px',
+  maxHeight: '160px',
   overflowY: 'auto',
   backgroundColor: '#2c3e50',
   borderRadius: '8px',
@@ -55,15 +55,15 @@ const dropdownItemStyle = (isActive: boolean): React.CSSProperties => ({
   borderBottom: '1px solid #3a506b',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
-  textAlign: 'left',
+  textAlign: 'center', // ← центрируем текст скорости
 });
 
-// Простой спиннер
+// Компактный спиннер
 const Spinner = () => (
   <div
     style={{
-      width: '20px',
-      height: '20px',
+      width: '16px',
+      height: '16px',
       border: '2px solid rgba(255,255,255,0.3)',
       borderTop: '2px solid white',
       borderRadius: '50%',
@@ -91,15 +91,18 @@ export default function BibleTopBar({
   const [isChapterOpen, setIsChapterOpen] = useState(false);
   const [isLocalPlaying, setIsLocalPlaying] = useState(false);
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
+  const [isSpeedOpen, setIsSpeedOpen] = useState(false); // ← новое состояние
+  const [playbackRate, setPlaybackRate] = useState(1.0); // ← по умолчанию 1.0x
 
   const bookRef = useRef<HTMLDivElement>(null);
   const chapterRef = useRef<HTMLDivElement>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null); // ← для управления аудио
+  const speedRef = useRef<HTMLDivElement>(null); // ← для меню скорости
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useClickOutside(bookRef, () => setIsBookOpen(false));
   useClickOutside(chapterRef, () => setIsChapterOpen(false));
+  useClickOutside(speedRef, () => setIsSpeedOpen(false)); // ← обработка клика вне меню скорости
 
-  // Очистка аудио при размонтировании или смене главы/книги
   useEffect(() => {
     return () => {
       if (audioRef.current) {
@@ -114,6 +117,7 @@ export default function BibleTopBar({
       if (e.key === 'Escape') {
         setIsBookOpen(false);
         setIsChapterOpen(false);
+        setIsSpeedOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -123,21 +127,21 @@ export default function BibleTopBar({
   const currentBook = ALL_BOOKS[selectedBookKey];
   const chapterOptions = Array.from({ length: currentBook.chapters }, (_, i) => i + 1);
 
+  const speedOptions = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
+
   const getAudioUrl = () => {
-    return `${GITHUB_PAGES_BASE_URL}bible1.1.mp3`;
+    return `${GITHUB_PAGES_BASE_URL}bible1.${selectedChapter}.mp3`;
   };
 
   const handleLocalPlayPause = async () => {
     if (isLoadingAudio) return;
 
-    // Если уже играет — ставим на паузу
     if (isLocalPlaying) {
       audioRef.current?.pause();
       setIsLocalPlaying(false);
       return;
     }
 
-    // Если аудио уже создано и не играет — просто возобновляем
     if (audioRef.current) {
       try {
         await audioRef.current.play();
@@ -148,7 +152,6 @@ export default function BibleTopBar({
       return;
     }
 
-    // Иначе — создаём и загружаем
     setIsLoadingAudio(true);
 
     try {
@@ -159,16 +162,13 @@ export default function BibleTopBar({
         throw new Error(`HTTP ${response.status}`);
       }
 
-      // Создаём аудио-элемент
       const audio = new Audio(url);
       audioRef.current = audio;
 
-      // Обработчики событий (опционально)
       audio.onended = () => {
         setIsLocalPlaying(false);
       };
 
-      // Запускаем воспроизведение
       await audio.play();
       setIsLocalPlaying(true);
     } catch (error) {
@@ -188,7 +188,7 @@ export default function BibleTopBar({
           top: 0,
           left: 0,
           right: 0,
-          height: '104px',
+          height: '96px',
           display: 'flex',
           flexDirection: 'column',
           backgroundColor: '#667eea',
@@ -279,33 +279,35 @@ export default function BibleTopBar({
           </div>
         </div>
 
-        {/* Аудио-панель */}
+        {/* Аудио-панель — компактная */}
         <div
           style={{
-            height: '48px',
+            height: '40px',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            padding: '0 16px',
-            backgroundColor: 'rgba(0, 0, 0, 0.2)',
+            justifyContent: 'space-between', // ← распределяем: кнопки слева, скорость справа
+            padding: '0 12px',
+            backgroundColor: 'rgba(0, 0, 0, 0.15)',
             boxSizing: 'border-box',
           }}
         >
-          <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+          {/* Левая группа: управление */}
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
             <button
               style={{
                 background: 'none',
                 border: 'none',
                 color: 'white',
-                fontSize: '20px',
+                fontSize: '18px',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: '36px',
-                height: '36px',
+                width: '32px',
+                height: '32px',
                 borderRadius: '50%',
                 outline: 'none',
+                padding: 0,
               }}
               aria-label="Previous chapter"
             >
@@ -319,16 +321,16 @@ export default function BibleTopBar({
                 background: 'none',
                 border: 'none',
                 color: 'white',
-                fontSize: '24px',
+                fontSize: '20px',
                 cursor: isLoadingAudio ? 'not-allowed' : 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: '44px',
-                height: '44px',
+                width: '36px',
+                height: '36px',
                 borderRadius: '50%',
                 outline: 'none',
-                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                padding: 0,
               }}
               aria-label={
                 isLoadingAudio
@@ -346,20 +348,55 @@ export default function BibleTopBar({
                 background: 'none',
                 border: 'none',
                 color: 'white',
-                fontSize: '20px',
+                fontSize: '18px',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: '36px',
-                height: '36px',
+                width: '32px',
+                height: '32px',
                 borderRadius: '50%',
                 outline: 'none',
+                padding: 0,
               }}
               aria-label="Next chapter"
             >
               <IoPlaySkipForward />
             </button>
+          </div>
+
+          {/* Правая группа: скорость воспроизведения */}
+          <div ref={speedRef} style={{ position: 'relative', minWidth: '60px' }}>
+            <div
+              onClick={() => setIsSpeedOpen(!isSpeedOpen)}
+              style={{
+                ...baseTriggerStyle,
+                fontSize: '14px',
+                padding: '6px 10px',
+                minWidth: '60px',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(0, 0, 0, 0.25)',
+              }}
+            >
+              {playbackRate}x
+            </div>
+
+            {isSpeedOpen && (
+              <div style={{ ...dropdownMenuStyle, width: '80px' }}>
+                {speedOptions.map((rate) => (
+                  <div
+                    key={rate}
+                    onClick={() => {
+                      setPlaybackRate(rate);
+                      setIsSpeedOpen(false);
+                    }}
+                    style={dropdownItemStyle(rate === playbackRate)}
+                  >
+                    {rate}x
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </header>
