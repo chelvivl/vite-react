@@ -5,6 +5,7 @@ import { useClickOutside } from '../hooks/useClickOutside';
 import { IoPlay, IoPause } from 'react-icons/io5';
 import { useAudioPlayback } from '../hooks/useAudioPlayback';
 import { getBookIdByEnglishName } from '../utils/bibleData';
+import { getRussianNameByBookId } from '../utils/bibleData';
 
 const baseTriggerStyle: React.CSSProperties = {
   fontSize: '16px',
@@ -169,7 +170,7 @@ export default function BibleTopBar({
           top: 0,
           left: 0,
           right: 0,
-          height: '96px',
+          height: '86px',
           display: 'flex',
           flexDirection: 'column',
           backgroundColor: '#667eea',
@@ -288,11 +289,11 @@ export default function BibleTopBar({
 
         <div
           style={{
-            height: '40px',
+            height: '30px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '0 12px',
+            padding: '0px 3px 0px 15px',
             backgroundColor: '#d69e2e',
             boxSizing: 'border-box',
           }}
@@ -300,13 +301,19 @@ export default function BibleTopBar({
           <div style={{ height: '100%', display: 'flex', alignItems: 'center' }}>
             {currentAudioKey !== null && <AudioWave />}
           </div>
+             { currentAudioKey != null &&
+                    <div style={{ height: '100%', display: 'flex', alignItems: 'center', fontSize: '12px' }}>
+                  Сейчас играет: {getRussianNameByBookId(currentAudioKey?.book)} Глава {currentAudioKey?.chapter}
+                 </div>
+                 }
+
 
           <div ref={speedRef} style={{ position: 'relative', minWidth: '60px' }}>
             <div
               onClick={() => setIsSpeedOpen(!isSpeedOpen)}
               style={{
                 ...baseTriggerStyle,
-                fontSize: '14px',
+                fontSize: '10px',
                 padding: '6px 10px',
                 minWidth: '80px',
                 justifyContent: 'center',

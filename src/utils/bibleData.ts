@@ -90,3 +90,12 @@ export function getBookIdByEnglishName(bookName: string): number {
     return book.bookId;
   }
 }
+
+export function getRussianNameByBookId(bookId: number): string {
+  for (const book of Object.values(ALL_BOOKS)) {
+    if (book.bookId === bookId) {
+      return book.title;
+    }
+  }
+  return "Нет данных";
+}
