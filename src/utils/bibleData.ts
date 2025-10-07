@@ -81,3 +81,12 @@ export const NewTestament: Record<string, BibleBook> = {
 };
 
 export const ALL_BOOKS: Record<string, BibleBook> = { ...OldTestament, ...NewTestament };
+
+export function getBookIdByEnglishName(bookName: string): number {
+  const book = ALL_BOOKS[bookName];
+  if(book == null){
+    return 1;
+  } else {
+    return book.bookId;
+  }
+}
