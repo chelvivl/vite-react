@@ -193,7 +193,14 @@ export default function BibleScreen() {
   );
 
   return (
-    <div style={{ overflow: 'hidden', height: '100dvh', position: 'relative', bottom: '16px' }}>
+    <div style={{
+        overflow: 'hidden',
+        height: '100dvh',
+        display: 'flex',
+        position: 'relative',
+        flexDirection: 'column',
+        }}>
+
       <BibleTopBar
         selectedBookKey={selectedBookKey}
         selectedChapter={selectedChapter}
@@ -204,13 +211,10 @@ export default function BibleScreen() {
       {/* Текущая страница */}
       <div
         style={{
-          position: 'absolute',
-          top: '110px',
           left: 0,
           right: 0,
           bottom: 0,
           overflowY: 'auto',
-          paddingTop: '16px',
           paddingRight: '16px',
           paddingLeft: '16px',
           textAlign: 'justify',
