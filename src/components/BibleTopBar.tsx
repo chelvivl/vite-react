@@ -314,6 +314,7 @@ export default function BibleTopBar({
               style={{
                 padding: '6px 10px',
                 minWidth: '50px',
+                fontSize: '12px',
                 justifyContent: 'center',
               }}
             >
