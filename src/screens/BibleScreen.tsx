@@ -248,7 +248,7 @@ export default function BibleScreen() {
         <div
           style={{
             position: 'absolute',
-            top: '72px',
+            top: '120px',
             left: 0,
             right: 0,
             bottom: 0,
