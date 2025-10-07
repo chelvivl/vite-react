@@ -170,7 +170,7 @@ export default function BibleTopBar({
           top: 0,
           left: 0,
           right: 0,
-          height: '86px',
+          height: isPlaying ? '86px' : '56px',
           display: 'flex',
           flexDirection: 'column',
           backgroundColor: '#667eea',
@@ -286,7 +286,7 @@ export default function BibleTopBar({
             {isLoading ? <Spinner /> : isPlayingCurrent ? <IoPause /> : <IoPlay />}
           </button>
         </div>
-
+        {isPlaying &&
         <div
           style={{
             height: '30px',
@@ -312,12 +312,9 @@ export default function BibleTopBar({
             <div
               onClick={() => setIsSpeedOpen(!isSpeedOpen)}
               style={{
-                ...baseTriggerStyle,
-                fontSize: '10px',
                 padding: '6px 10px',
-                minWidth: '80px',
+                minWidth: '50px',
                 justifyContent: 'center',
-                backgroundColor: 'rgba(0, 0, 0, 0.25)',
               }}
             >
               {playbackRate}x
@@ -336,7 +333,7 @@ export default function BibleTopBar({
               </div>
             )}
           </div>
-        </div>
+        </div>}
       </header>
     </>
   );
