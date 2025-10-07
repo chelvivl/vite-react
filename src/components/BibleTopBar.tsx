@@ -162,7 +162,7 @@ export default function BibleTopBar({
     currentAudioKey?.book === getBookIdByEnglishName(selectedBookKey) && currentAudioKey?.chapter === selectedChapter;
 
   return (
-    <div style={{height: isPlaying ? '260px' : '170px'}}>
+    <div>
       <SpinnerStyle />
       <header
         style={{
