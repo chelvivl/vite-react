@@ -94,28 +94,6 @@ const SpinnerStyle = () => (
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-
-    @keyframes slideInDown {
-      from {
-        transform: translateY(-100%);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    @keyframes slideOutUp {
-      from {
-        transform: translateY(0);
-        opacity: 1;
-      }
-      to {
-        transform: translateY(-100%);
-        opacity: 0;
-      }
-    }
   `}</style>
 );
 
@@ -135,8 +113,6 @@ export default function BibleTopBar({
   const [isBookOpen, setIsBookOpen] = useState(false);
   const [isChapterOpen, setIsChapterOpen] = useState(false);
   const [isSpeedOpen, setIsSpeedOpen] = useState(false);
-  const [showAudioBar, setShowAudioBar] = useState(false);
-  const [isAnimatingOut, setIsAnimatingOut] = useState(false);
 
   const bookRef = useRef<HTMLDivElement>(null);
   const chapterRef = useRef<HTMLDivElement>(null);
@@ -150,6 +126,8 @@ export default function BibleTopBar({
     playChapter,
     setSpeed,
   } = useAudioPlayback();
+
+  console.log(isPlaying)
 
   useClickOutside(bookRef, () => setIsBookOpen(false));
   useClickOutside(chapterRef, () => setIsChapterOpen(false));
@@ -166,21 +144,6 @@ export default function BibleTopBar({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
-
-  // Управление анимацией аудио-панели
-  useEffect(() => {
-    if (isPlaying) {
-      setShowAudioBar(true);
-      setIsAnimatingOut(false);
-    } else if (showAudioBar) {
-      setIsAnimatingOut(true);
-      const timer = setTimeout(() => {
-        setShowAudioBar(false);
-        setIsAnimatingOut(false);
-      }, 300); // Должно совпадать с длительностью анимации
-      return () => clearTimeout(timer);
-    }
-  }, [isPlaying, showAudioBar]);
 
   const currentBook = ALL_BOOKS[selectedBookKey];
   const chapterOptions = Array.from({ length: currentBook.chapters }, (_, i) => i + 1);
@@ -199,15 +162,15 @@ export default function BibleTopBar({
     currentAudioKey?.book === getBookIdByEnglishName(selectedBookKey) && currentAudioKey?.chapter === selectedChapter;
 
   return (
-
-    <div style={{ height: showAudioBar ? '225px' : '150px' }}>
+    <div style={{height: isPlaying ? '260px' : '170px'}}>
       <SpinnerStyle />
       <header
         style={{
+          position: 'fixed',
           top: 0,
           left: 0,
           right: 0,
-          height: showAudioBar ? '86px' : '56px',
+          height: isPlaying ? '86px' : '56px',
           display: 'flex',
           flexDirection: 'column',
           backgroundColor: '#667eea',
@@ -323,59 +286,55 @@ export default function BibleTopBar({
             {isLoading ? <Spinner /> : isPlayingCurrent ? <IoPause /> : <IoPlay />}
           </button>
         </div>
+        {isPlaying &&
+        <div
+          style={{
+            height: '30px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0px 3px 0px 15px',
+            backgroundColor: '#d69e2e',
+            boxSizing: 'border-box',
+          }}
+        >
+          <div style={{ height: '100%', display: 'flex', alignItems: 'center' }}>
+            {currentAudioKey !== null && <AudioWave />}
+          </div>
+             { currentAudioKey != null &&
+                    <div style={{ height: '100%', display: 'flex', alignItems: 'center', fontSize: '12px' }}>
+                  Сейчас играет: {getRussianNameByBookId(currentAudioKey?.book)} Глава {currentAudioKey?.chapter}
+                 </div>
+                 }
 
-        {showAudioBar && (
-          <div
-            style={{
-              height: '30px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '0px 3px 0px 15px',
-              backgroundColor: '#d69e2e',
-              boxSizing: 'border-box',
-              animation: isAnimatingOut
-                ? 'slideOutUp 0.3s ease forwards'
-                : 'slideInDown 0.3s ease forwards',
-            }}
-          >
-            <div style={{ height: '100%', display: 'flex', alignItems: 'center' }}>
-              {currentAudioKey !== null && <AudioWave />}
+
+          <div ref={speedRef} style={{ position: 'relative', minWidth: '60px' }}>
+            <div
+              onClick={() => setIsSpeedOpen(!isSpeedOpen)}
+              style={{
+                padding: '6px 10px',
+                minWidth: '50px',
+                fontSize: '12px',
+                justifyContent: 'center',
+              }}
+            >
+              {playbackRate}x
             </div>
-            {currentAudioKey != null && (
-              <div style={{ height: '100%', display: 'flex', alignItems: 'center', fontSize: '12px' }}>
-                Сейчас играет: {getRussianNameByBookId(currentAudioKey?.book)} Глава {currentAudioKey?.chapter}
+            {isSpeedOpen && (
+              <div style={{ ...dropdownMenuStyle }}>
+                {speedOptions.map((rate) => (
+                  <div
+                    key={rate}
+                    onClick={() => handleSpeedChange(rate)}
+                    style={dropdownItemStyle(rate === playbackRate)}
+                  >
+                    {rate}x
+                  </div>
+                ))}
               </div>
             )}
-
-            <div ref={speedRef} style={{ position: 'relative', minWidth: '60px' }}>
-              <div
-                onClick={() => setIsSpeedOpen(!isSpeedOpen)}
-                style={{
-                  padding: '6px 10px',
-                  minWidth: '50px',
-                  fontSize: '12px',
-                  justifyContent: 'center',
-                }}
-              >
-                {playbackRate}x
-              </div>
-              {isSpeedOpen && (
-                <div style={{ ...dropdownMenuStyle }}>
-                  {speedOptions.map((rate) => (
-                    <div
-                      key={rate}
-                      onClick={() => handleSpeedChange(rate)}
-                      style={dropdownItemStyle(rate === playbackRate)}
-                    >
-                      {rate}x
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
           </div>
-        )}
+        </div>}
       </header>
     </div>
   );
