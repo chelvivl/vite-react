@@ -251,13 +251,10 @@ export default function BibleScreen() {
       {isAnimating && (
         <div
           style={{
-            position: 'absolute',
-            top: '110px',
             left: 0,
             right: 0,
             bottom: 0,
             overflowY: 'auto',
-            paddingTop: '16px',
             paddingRight: '16px',
             paddingLeft: '16px',
             textAlign: 'justify',
